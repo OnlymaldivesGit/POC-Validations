@@ -118,9 +118,9 @@ def merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,cre
     merged_df[cols_zero] = merged_df[cols_zero].fillna(0)
     merged_df[cols_zero]= merged_df[cols_zero].astype(float)
 
-    values_to_check = ["M", "EM", "AL", "PAL", "AU", "X","ML","O"]
+    values_to_check = ["1", "Li", "LC","Lc"]
 
-    condition = (merged_df['Prev Day'].isin(values_to_check)) & (merged_df['Outstation airport'] == "")
+    condition = (~merged_df['Prev Day'].isin(values_to_check)) & (merged_df['Outstation airport'] == "")
     merged_df.loc[condition, 'Outstation airport'] = 'MLE'
     return merged_df
 
