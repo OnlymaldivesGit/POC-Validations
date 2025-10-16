@@ -79,7 +79,7 @@ if selected == "Input Data Validator":
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
         
         if input_crew_stats is None:
-            crew_stats=pd.read_excel("Crew Stats.xlsx")
+            crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
         else:
             crew_stats=pd.read_excel(input_crew_stats)
 
@@ -161,7 +161,7 @@ if selected == "Constraints Validator":
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
         
         if input_crew_stats is None:
-            crew_stats=pd.read_excel("Crew Stats.xlsx")
+            crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
         else:
             crew_stats=pd.read_excel(input_crew_stats)
 
