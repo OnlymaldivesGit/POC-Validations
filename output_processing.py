@@ -30,7 +30,7 @@ def Schedule_output_processing_2(Schedule_output):
     Schedule_output_2['STD -  Scheduled Departure'] = pd.to_datetime(Schedule_output_2['STD -  Scheduled Departure'], format='%H:%M:%S')
     Schedule_output_2['STA -  Scheduled Arrival'] = pd.to_datetime(Schedule_output_2['STA -  Scheduled Arrival'], format='%H:%M:%S')
 
-    Schedule_output_2['Block hours'] = ((Schedule_output_2['STA -  Scheduled Arrival'] - Schedule_output_2['STD -  Scheduled Departure']).dt.total_seconds()+600) / 3600
+    Schedule_output_2['Block hours'] = ((Schedule_output_2['STA -  Scheduled Arrival'] - Schedule_output_2['STD -  Scheduled Departure']).dt.total_seconds()*1.35) / 3600
     Schedule_output_2 = Schedule_output_2.sort_values(['Crew code', 'STD -  Scheduled Departure'])
 
     Schedule_output_2['Group id'] = (
