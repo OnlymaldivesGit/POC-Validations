@@ -47,6 +47,9 @@ schedule_date = schedule_date.strftime("%Y-%m-%d")
 prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
+input_flight_plan = st.file_uploader("Select input flight plan", type=["xlsx", "xls"])
+input_crew_stats = st.file_uploader("Select crew stats file", type=["xlsx", "xls"])
+output_flight_plan = st.file_uploader("Select the solver output", type=["xlsx", "xls"])
 
 with st.sidebar:
     selected = option_menu(
@@ -63,38 +66,49 @@ with st.sidebar:
 
 if selected == "Input Data Validator":
     st.title("Input Data Validator")
-    
-
-    aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
-    crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
-    seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
-    logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
-    crew_master=pd.read_excel("Model Validations/Resources.xlsx")
-    expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
-    flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
-    month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-    crew_stats=pd.read_excel("Crew Stats.xlsx")
-    Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
-    Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
-
-    aircraft=aircraft_processing(aircraft)
-    crew_aircraft=crew_aircraft_processing(crew_aircraft)
-    seniority=seniority_processing(seniority)
-    logsheet=logsheet_processing(logsheet,prev_day)
-    crew_master=crew_master_processing(crew_master)
-    expiry_data=expiry_data_processing(expiry_data)
-    flight_training=flight_training_processing(flight_training,schedule_date)
-    month_plan=month_plan_processing(month_plan,schedule_date,prev_day,next_day)
-    crew_stats=crew_stats_processing(crew_stats)
-    Schedule_input=schedule_input_processing(Schedule_input)
-
-
-    merged_df=merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,crew_stats)
-
-
-
 
     if st.button("Validate the data"):
+
+        aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
+        crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
+        seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
+        logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
+        crew_master=pd.read_excel("Model Validations/Resources.xlsx")
+        expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
+        flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
+        month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
+        
+        if input_crew_stats is None:
+            crew_stats=pd.read_excel("Crew Stats.xlsx")
+        else:
+            crew_stats=pd.read_excel(input_crew_stats)
+
+        if input_flight_plan is None:
+            Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
+        else:
+            Schedule_input=pd.read_excel(input_flight_plan)
+
+        if output_flight_plan is None:
+            Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
+        else:
+            Schedule_output=pd.read_excel(output_flight_plan)
+        
+        
+
+        aircraft=aircraft_processing(aircraft)
+        crew_aircraft=crew_aircraft_processing(crew_aircraft)
+        seniority=seniority_processing(seniority)
+        logsheet=logsheet_processing(logsheet,prev_day)
+        crew_master=crew_master_processing(crew_master)
+        expiry_data=expiry_data_processing(expiry_data)
+        flight_training=flight_training_processing(flight_training,schedule_date)
+        month_plan=month_plan_processing(month_plan,schedule_date,prev_day,next_day)
+        crew_stats=crew_stats_processing(crew_stats)
+        Schedule_input=schedule_input_processing(Schedule_input)
+
+
+        merged_df=merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,crew_stats)
+    
         input_issue_1,input_issue_2=input_validation_fun(merged_df)
 
         with st.spinner("⚪️ Validating the data..."):
@@ -136,49 +150,59 @@ if selected == "Input Data Validator":
 
 if selected == "Constraints Validator":
     st.title("Constraints Validator")
-
-    aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
-    crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
-    seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
-    logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
-    crew_master=pd.read_excel("Model Validations/Resources.xlsx")
-    expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
-    flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
-    month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-    crew_stats=pd.read_excel("Crew Stats.xlsx")
-    Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
-    Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
-
-    aircraft=aircraft_processing(aircraft)
-    crew_aircraft=crew_aircraft_processing(crew_aircraft)
-    seniority=seniority_processing(seniority)
-    logsheet=logsheet_processing(logsheet,prev_day)
-    crew_master=crew_master_processing(crew_master)
-    expiry_data=expiry_data_processing(expiry_data)
-    flight_training=flight_training_processing(flight_training,schedule_date)
-    month_plan=month_plan_processing(month_plan,schedule_date,prev_day,next_day)
-    crew_stats=crew_stats_processing(crew_stats)
-    Schedule_input=schedule_input_processing(Schedule_input)
-
-
-    merged_df=merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,crew_stats)
-
-    Schedule_output=Schedule_output_processing(Schedule_output)
-    Schedule_output_2=Schedule_output_processing_2(Schedule_output)
-    output_master=output_master_processing(Schedule_output_2)
-    crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
-
-    comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
-
-
-    available_working = comparison_master[(comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) & (~comparison_master["Working Status"].isna())]
-    Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) &(comparison_master["Working Status"].isna())]
-    training_outstations = comparison_master[(~comparison_master["Schedule Day"].isin(["1", "Li", "LC","X","AL","AU","PAL"])) & (~comparison_master["Outstation airport"].isin(["", "MLE"]))]
-
-
-
-
     if st.button("Validate the data"):
+        aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
+        crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
+        seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
+        logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
+        crew_master=pd.read_excel("Model Validations/Resources.xlsx")
+        expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
+        flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
+        month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
+        
+        if input_crew_stats is None:
+            crew_stats=pd.read_excel("Crew Stats.xlsx")
+        else:
+            crew_stats=pd.read_excel(input_crew_stats)
+
+        if input_flight_plan is None:
+            Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
+        else:
+            Schedule_input=pd.read_excel(input_flight_plan)
+
+        if output_flight_plan is None:
+            Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
+        else:
+            Schedule_output=pd.read_excel(output_flight_plan)
+
+
+
+        aircraft=aircraft_processing(aircraft)
+        crew_aircraft=crew_aircraft_processing(crew_aircraft)
+        seniority=seniority_processing(seniority)
+        logsheet=logsheet_processing(logsheet,prev_day)
+        crew_master=crew_master_processing(crew_master)
+        expiry_data=expiry_data_processing(expiry_data)
+        flight_training=flight_training_processing(flight_training,schedule_date)
+        month_plan=month_plan_processing(month_plan,schedule_date,prev_day,next_day)
+        crew_stats=crew_stats_processing(crew_stats)
+        Schedule_input=schedule_input_processing(Schedule_input)
+
+
+        merged_df=merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,crew_stats)
+
+        Schedule_output=Schedule_output_processing(Schedule_output)
+        Schedule_output_2=Schedule_output_processing_2(Schedule_output)
+        output_master=output_master_processing(Schedule_output_2)
+        crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
+
+        comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
+
+
+        available_working = comparison_master[(comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) & (~comparison_master["Working Status"].isna())]
+        Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) &(comparison_master["Working Status"].isna())]
+        training_outstations = comparison_master[(~comparison_master["Schedule Day"].isin(["1", "Li", "LC","X","AL","AU","PAL"])) & (~comparison_master["Outstation airport"].isin(["", "MLE"]))]
+    
         with st.spinner("⚪️ Validating the Schedule..."):
             time.sleep(1)
             placeholder1 = st.empty()
