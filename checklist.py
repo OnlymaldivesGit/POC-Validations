@@ -113,7 +113,7 @@ def training_pairing_check(flight_training, merged_df):
         axis=1
     )
 
-    return flight_training[(flight_training["Instructor_availability_check"] != 1) | (~flight_training["Trainee_availability_check"].isin(["Li", "LC"]))]
+    return flight_training[(flight_training["Instructor_availability_check"] != "1") | (~flight_training["Trainee_availability_check"].isin(["Li", "LC"]))]
 
 
 
