@@ -1,4 +1,4 @@
-cols_empty = ['Crew code', 'Prev Day', 'Schedule Day', 'Next Day', 'Crew name','Crew Type', 'Seniority Level', 'Is Instructor?', 'Expiry status', 'Outstation airport']
+cols_empty = ['Crew code', 'Prev Day', 'Schedule Day', 'Next Day', 'Crew name','Crew Type', 'Seniority Level', 'Is Instructor?', 'Outstation airport']
 cols_zero = ['Max BH left','Max BH left ON', 'Max DH left', 'Max sectors left']
 
 def input_validation_fun(merged_df):
