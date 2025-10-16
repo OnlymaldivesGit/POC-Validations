@@ -131,6 +131,7 @@ if selected == "Input Data Validator":
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 input_issue_1.to_excel(writer, sheet_name='Validation 1', index=False)
                 input_issue_2.to_excel(writer, sheet_name='Validation 2', index=False)
+                merged_df.to_excel(writer, sheet_name='Input data ', index=False)
 
             output.seek(0)
 
@@ -189,7 +190,6 @@ if selected == "Constraints Validator":
         crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
 
         comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
-
 
         available_working = comparison_master[(comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) & (~comparison_master["Working Status"].isna())]
         Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) &(comparison_master["Working Status"].isna())]
@@ -411,6 +411,9 @@ if selected == "Constraints Validator":
             pairings_issue_1.to_excel(writer, sheet_name='Error in seniority pairings', index=False)
             LTC_check.to_excel(writer, sheet_name='Error in LTC pairings', index=False)
             training_issue.to_excel(writer, sheet_name='Error in training pairings', index=False)
+            comparison_master.to_excel(writer, sheet_name='comparison_master', index=False)
+            crew_ac_stats.to_excel(writer, sheet_name='crew_ac_stats', index=False)
+            output_master.to_excel(writer, sheet_name='output_master', index=False)
 
         output.seek(0)
         st.download_button(
