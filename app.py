@@ -47,9 +47,6 @@ schedule_date = schedule_date.strftime("%Y-%m-%d")
 prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
-input_flight_plan = st.file_uploader("Select input flight plan", type=["xlsx", "xls"])
-output_flight_plan = st.file_uploader("Select the solver output", type=["xlsx", "xls"])
-
 with st.sidebar:
     selected = option_menu(
         menu_title="Modules",  # Sidebar title
@@ -77,16 +74,6 @@ if selected == "Input Data Validator":
         flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
         crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-
-        if input_flight_plan is None:
-            Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
-        else:
-            Schedule_input=pd.read_excel(input_flight_plan)
-
-        if output_flight_plan is None:
-            Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
-        else:
-            Schedule_output=pd.read_excel(output_flight_plan)
         
         
 
@@ -99,7 +86,6 @@ if selected == "Input Data Validator":
         flight_training=flight_training_processing(flight_training,schedule_date)
         month_plan=month_plan_processing(month_plan,schedule_date,prev_day,next_day)
         crew_stats=crew_stats_processing(crew_stats)
-        Schedule_input=schedule_input_processing(Schedule_input)
 
 
         merged_df=merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,crew_stats)
@@ -145,6 +131,10 @@ if selected == "Input Data Validator":
 
 
 if selected == "Constraints Validator":
+
+    input_flight_plan = st.file_uploader("Select input flight plan", type=["xlsx", "xls"])
+    output_flight_plan = st.file_uploader("Select the solver output", type=["xlsx", "xls"])
+
     st.title("Constraints Validator")
     if st.button("Validate the data"):
         aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
@@ -156,6 +146,8 @@ if selected == "Constraints Validator":
         flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
         crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
+
+        
         
 
         if input_flight_plan is None:
