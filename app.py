@@ -48,7 +48,6 @@ prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).st
 next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
 input_flight_plan = st.file_uploader("Select input flight plan", type=["xlsx", "xls"])
-input_crew_stats = st.file_uploader("Select crew stats file", type=["xlsx", "xls"])
 output_flight_plan = st.file_uploader("Select the solver output", type=["xlsx", "xls"])
 
 with st.sidebar:
@@ -77,11 +76,7 @@ if selected == "Input Data Validator":
         expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
         flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-        
-        if input_crew_stats is None:
-            crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-        else:
-            crew_stats=pd.read_excel(input_crew_stats)
+        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
 
         if input_flight_plan is None:
             Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
@@ -159,11 +154,8 @@ if selected == "Constraints Validator":
         expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
         flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
+        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
         
-        if input_crew_stats is None:
-            crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-        else:
-            crew_stats=pd.read_excel(input_crew_stats)
 
         if input_flight_plan is None:
             Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
