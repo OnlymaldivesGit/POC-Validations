@@ -19,6 +19,9 @@ def Schedule_output_processing(Schedule_output):
     Schedule_output['STA -  Scheduled Arrival'] = Schedule_output['STA -  Scheduled Arrival'].str.strip()
     Schedule_output['Dep. Airport'] = Schedule_output['Dep. Airport'].str.strip()
     Schedule_output['Arr. Airport'] = Schedule_output['Arr. Airport'].str.strip()
+    Schedule_output['Captain'] = Schedule_output['Captain'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
+    Schedule_output['First Officer'] = Schedule_output['First Officer'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
+    Schedule_output['Flight Attendant'] = Schedule_output['Flight Attendant'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
     return Schedule_output
 
 
@@ -82,7 +85,7 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
 
     crew_ac_stats=idx_minSTD_output.merge(idx_maxSTA_output,on=["Group id","Crew code","Assigned AC"])
     crew_ac_stats=crew_ac_stats.merge(aircraft,left_on=["Assigned AC"],right_on=["Aircraft Code"])
-
+    print(crew_ac_stats)
 
     def get_qualification(x):
         matched = crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']]
@@ -92,6 +95,7 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
 
     crew_ac_stats['qualified'] = crew_ac_stats.apply(get_qualification, axis=1)
     # crew_ac_stats['qualified'] = crew_ac_stats.apply(lambda x: crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']].values[0], axis=1)
+    
     return crew_ac_stats
 
 
