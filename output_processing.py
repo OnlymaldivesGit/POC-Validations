@@ -9,6 +9,9 @@ next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).st
 
 
 
+
+
+
 def Schedule_output_processing(Schedule_output):
     Schedule_output["Flight No."] = Schedule_output["Flight No."].str.strip()
     Schedule_output['Aircraft No.'] = Schedule_output['Aircraft No.'].str.strip()
@@ -79,7 +82,16 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
 
     crew_ac_stats=idx_minSTD_output.merge(idx_maxSTA_output,on=["Group id","Crew code","Assigned AC"])
     crew_ac_stats=crew_ac_stats.merge(aircraft,left_on=["Assigned AC"],right_on=["Aircraft Code"])
-    crew_ac_stats['qualified'] = crew_ac_stats.apply(lambda x: crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']].values[0], axis=1)
+
+
+    def get_qualification(x):
+        matched = crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']]
+        if not matched.empty:
+            return matched.values[0]
+        return None  # or 0, 'N/A', etc.
+
+    crew_ac_stats['qualified'] = crew_ac_stats.apply(get_qualification, axis=1)
+    # crew_ac_stats['qualified'] = crew_ac_stats.apply(lambda x: crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']].values[0], axis=1)
     return crew_ac_stats
 
 
