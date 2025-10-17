@@ -7,7 +7,8 @@
 # Block hours, Duty Hours and sectors limits are being full filled
 # Schedule should match ( AC, Flights, Sectors etc)
 
-
+available_status=["1","Li","LC"]
+leave_status=["X","AL","AU","PAL","EM","ML"]
 
 
 def Schedule_check_fun(Schedule_output,Schedule_input):
@@ -26,16 +27,16 @@ def Schedule_check_fun(Schedule_output,Schedule_input):
 
 
 def crew_check_fun(comparison_master,available_working):
-  
-    crew_mistake_1=comparison_master[comparison_master['Working Status']==1]
-    crew_mistake_1=crew_mistake_1[~comparison_master['Schedule Day'].isin(["1", "Li", "LC"])]
-    crew_mistake_1=crew_mistake_1[comparison_master['Outstation airport'].isin(["", "MLE"])]
+    on_training=comparison_master[~(comparison_master["Schedule Day"].isin(leave_status+available_status))]
+    on_training_working=on_training[comparison_master["Working Status"]==1]
 
-    # Crew who are working and on Trainings starting from Outstation but has not 1 Flights
+    crew_mistake_1 = on_training_working[(on_training_working["Outstation airport"].isin(["", "MLE"]))]
+    crew_mistake_1=crew_mistake_1[['Crew code', 'Prev Day', 'Schedule Day', 'Next Day',"Outstation airport",'Working Status']]
 
-    crew_mistake_11=crew_mistake_1[(~comparison_master['Outstation airport'].isin(["", "MLE"])) &(~(comparison_master['Total flights'] == 1))]
-
+    on_training_working_outstations = on_training[~(on_training["Outstation airport"].isin(["", "MLE"]))]
+    crew_mistake_11=on_training_working_outstations[~(on_training_working_outstations['Total flights'] == 1)]
     crew_mistake_11=crew_mistake_11[['Crew code', 'Prev Day', 'Schedule Day','Outstation airport','Total flights','Working Status']]
+
     
     # Crew with mismatch Starting points
     crew_mistake_2=available_working[available_working["Starting from"]!=available_working["Outstation airport"]]
@@ -44,9 +45,9 @@ def crew_check_fun(comparison_master,available_working):
     # Crew who are not supposed to assign for overnights
     crew_mistake_3=available_working[comparison_master['Ending at']!="MLE"]
     crew_mistake_3=crew_mistake_3[["Crew code",'Next Day','Ending at']]
-    crew_mistake_3 = crew_mistake_3[crew_mistake_3["Next Day"].isin(["X", "AL", "PAL", "AU","ML","EM"])]
+    crew_mistake_3 = crew_mistake_3[crew_mistake_3["Next Day"].isin(leave_status)]
     
-    return crew_mistake_1[['Crew code', 'Prev Day', 'Schedule Day', 'Next Day','Working Status']], crew_mistake_11,crew_mistake_2,crew_mistake_3
+    return crew_mistake_1, crew_mistake_11,crew_mistake_2,crew_mistake_3
 
 def aircraft_check(crew_ac_stats):
     return crew_ac_stats[crew_ac_stats["qualified"]!=1.0]

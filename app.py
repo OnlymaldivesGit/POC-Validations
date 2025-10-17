@@ -10,7 +10,8 @@ import time
 import io as io_module
 
 
-
+available_status=["1","Li","LC"]
+leave_status=["X","AL","AU","PAL","EM","ML"]
 
 
 from input_processing import schedule_input_processing
@@ -183,10 +184,15 @@ if selected == "Constraints Validator":
 
         comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
 
-        available_working = comparison_master[(comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) & (~comparison_master["Working Status"].isna())]
-        Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(["1", "Li", "LC"])) &(comparison_master["Working Status"].isna())]
-        training_outstations = comparison_master[(~comparison_master["Schedule Day"].isin(["1", "Li", "LC","X","AL","AU","PAL"])) & (~comparison_master["Outstation airport"].isin(["", "MLE"]))]
-    
+        available_working = comparison_master[(comparison_master["Schedule Day"].isin(available_status)) & (~comparison_master["Working Status"].isna())]
+        Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(available_status)) &(comparison_master["Working Status"].isna())]
+        
+        leaves_working=comparison_master[(comparison_master["Schedule Day"].isin(leave_status)) & (~comparison_master["Working Status"].isna())]
+        
+        on_training=comparison_master[~(comparison_master["Schedule Day"].isin(leave_status+available_status))]
+        on_training_working=on_training[~comparison_master["Working Status"].isna()]
+        training_non_outstations = on_training[(on_training["Outstation airport"].isin(["", "MLE"]))]
+
         with st.spinner("⚪️ Validating the Schedule..."):
             time.sleep(1)
             placeholder1 = st.empty()
@@ -231,7 +237,7 @@ if selected == "Constraints Validator":
 
 
 
-
+        # Print of Data
         with st.expander("Schedule check"):
             if Schedule_check.empty:
                 st.markdown("No error in Schedule",unsafe_allow_html=True)
@@ -242,16 +248,26 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Crew with Training 1"):
+        with st.expander("Non Available crew check"):
+            if leaves_working.empty:
+                st.markdown("No crew on leave is being scheduled",unsafe_allow_html=True)
+            else:
+                st.dataframe(leaves_working[["Crew code","Schedule Day","Working Status"]])
+                st.markdown(
+                "The table above shows the list of crew who are on leave but has been allocated to Flights",
+                unsafe_allow_html=True
+                )
+
+        with st.expander("Training crew at base"):
             if crew_mistake_1.empty:
                 st.markdown("No such errors",unsafe_allow_html=True)
             else:
                 st.dataframe(crew_mistake_1)
                 st.markdown(
-                "The table above shows the list of crew who are working and on Trainings starting from MLE ",
+                "The table above shows the list of crew who are on training and at base last night but has been scheduled to Flight ",
                 unsafe_allow_html=True
                 )
-        with st.expander("Crew with Training 2"):
+        with st.expander("Error in Training crew outstation"):
             if crew_mistake_11.empty:
                 st.markdown("",unsafe_allow_html=True)
             else:
@@ -272,7 +288,7 @@ if selected == "Constraints Validator":
                 )
 
 
-        with st.expander("Error in Overnights"):
+        with st.expander("Error in next day overnights assignment"):
             if crew_mistake_3.empty:
                 st.markdown("No error with overnight assigment for next day",unsafe_allow_html=True)
             else:

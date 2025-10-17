@@ -7,9 +7,8 @@ prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).st
 next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
 
-
-
-
+available_status=["1","Li","LC"]
+leave_status=["X","AL","AU","PAL","EM","ML"]
 
 
 def Schedule_output_processing(Schedule_output):
@@ -94,7 +93,6 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
         return None  # or 0, 'N/A', etc.
 
     crew_ac_stats['qualified'] = crew_ac_stats.apply(get_qualification, axis=1)
-    # crew_ac_stats['qualified'] = crew_ac_stats.apply(lambda x: crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']].values[0], axis=1)
     
     return crew_ac_stats
 

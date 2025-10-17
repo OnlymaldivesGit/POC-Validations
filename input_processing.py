@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import numpy as np
 from functools import reduce
 
+available_status=["1","Li","LC"]
+leave_status=["X","AL","AU","PAL","EM","ML"]
+
 
 
 def schedule_input_processing(Schedule_input):
@@ -68,9 +71,6 @@ def month_plan_processing(month_plan,schedule_date,prev_day,next_day):
     month_plan["Prev Day"]=month_plan["Prev Day"].astype(str)
     month_plan["Schedule Day"]=month_plan["Schedule Day"].astype(str)
     month_plan["Next Day"]=month_plan["Next Day"].astype(str)
-
-
-    month_plan = month_plan[~month_plan["Schedule Day"].isin(["X","AL","AU","PAL","M","EM"]) & month_plan["Schedule Day"].notna()]
     return month_plan
 
 def flight_training_processing(flight_training,schedule_date):
@@ -118,7 +118,7 @@ def merged_data_fun(month_plan,crew_master, seniority, expiry_data, logsheet,cre
     merged_df[cols_zero] = merged_df[cols_zero].fillna(0)
     merged_df[cols_zero]= merged_df[cols_zero].astype(float)
 
-    values_to_check = ["1", "Li", "LC","Lc"]
+    values_to_check = available_status
 
     condition = (~merged_df['Prev Day'].isin(values_to_check)) & (merged_df['Outstation airport'] == "")
     merged_df.loc[condition, 'Outstation airport'] = 'MLE'
