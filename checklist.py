@@ -98,7 +98,7 @@ def seniority_check_fun(Schedule_output,merged_df):
     return pairings_issue_1, LTC_check
 
 
-def training_pairing_check(flight_training, merged_df):
+def training_pairing_check(flight_training, merged_df,output_master):
     def get_schedule_day(crew_code):
         matched = merged_df.loc[merged_df['Crew code'] == crew_code, 'Schedule Day']
         if not matched.empty:
@@ -108,8 +108,11 @@ def training_pairing_check(flight_training, merged_df):
     flight_training["Instructor_availability_check"] = flight_training['Instrutor'].apply(get_schedule_day)
     flight_training["Trainee_availability_check"] = flight_training['Trainee'].apply(get_schedule_day)
 
+    flight_training=flight_training.merge(output_master[["Crew code","Starting from","Crew Type"]],left_on=["Instrutor"],right_on=["Crew code"]).drop(["Crew code"],axis=1).rename(columns={'Starting from': 'Instructor_starting_point',"Crew Type":"Instructor_crewtype"})
+    flight_training=flight_training.merge(output_master[["Crew code","Starting from","Crew Type"]],left_on=["Trainee"],right_on=["Crew code"]).drop(["Crew code"],axis=1).rename(columns={'Starting from': 'Trainee_starting_point',"Crew Type":"Trainee_crewtype"})
 
-    return flight_training[(flight_training["Instructor_availability_check"] != "1") | (~flight_training["Trainee_availability_check"].isin(["Li", "LC"]))]
+
+    return flight_training
 
 
 

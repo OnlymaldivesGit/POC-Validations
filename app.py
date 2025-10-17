@@ -232,7 +232,7 @@ if selected == "Constraints Validator":
         with st.spinner("⚪️ Validating the Training Pairings..."):
             time.sleep(1)
             placeholder6 = st.empty()
-            training_issue=training_pairing_check(flight_training, merged_df)
+            training_issue=training_pairing_check(flight_training, merged_df,output_master)
             placeholder6.markdown("✅ Training Pairings Validated")
 
 
