@@ -6,6 +6,7 @@
 # No. of crew swaps should be less than 2
 # Block hours, Duty Hours and sectors limits are being full filled
 # Schedule should match ( AC, Flights, Sectors etc)
+import pandas as pd
 
 available_status=["1","Li","LC"]
 leave_status=["X","AL","AU","PAL","EM","ML","M"]
@@ -113,6 +114,32 @@ def training_pairing_check(flight_training, merged_df,output_master):
 
 
     return flight_training
+
+def get_short_time_diffs(df, crew_code_col='Crew code', start_col='Start time', end_col='End time', ac_col='Aircraft Code', min_gap=45):
+    counts = df[crew_code_col].value_counts()
+    multi_crew = counts[counts > 1].index
+    tmp = df[df[crew_code_col].isin(multi_crew)].copy()
+
+    tmp['start_seq'] = tmp.groupby(crew_code_col)[start_col].rank(method='first').astype(int)
+
+    firsts = tmp[tmp['start_seq'] == 1][[crew_code_col, start_col, end_col, ac_col]]
+    seconds = tmp[tmp['start_seq'] == 2][[crew_code_col, start_col, end_col, ac_col]]
+
+    result = pd.merge(firsts, seconds, on=crew_code_col)
+    result.columns = [
+        crew_code_col, 'First AC ST', 'First AC ET', 'First AC code',
+        'Second AC ST', 'Second AC ET', 'Second AC code']
+
+    result['First AC ET'] = pd.to_datetime(result['First AC ET'])
+    result['Second AC ST'] = pd.to_datetime(result['Second AC ST'])
+
+    result['Time difference'] = (result['Second AC ST'] - result['First AC ET']).dt.total_seconds() / 60
+
+    result = result[result["Time difference"] < min_gap]
+    return result
+
+
+
 
 
 

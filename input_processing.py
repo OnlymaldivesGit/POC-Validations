@@ -15,6 +15,7 @@ def schedule_input_processing(Schedule_input):
     Schedule_input['STA -  Scheduled Arrival'] = Schedule_input['STA -  Scheduled Arrival'].astype(str).str.strip()
     Schedule_input['Dep. Airport'] = Schedule_input['Dep. Airport'].str.strip()
     Schedule_input['Arr. Airport'] = Schedule_input['Arr. Airport'].str.strip()
+    Schedule_input=Schedule_input[Schedule_input['Dep. Airport']!=Schedule_input['Arr. Airport']]
     return Schedule_input
 
 def aircraft_processing(aircraft):

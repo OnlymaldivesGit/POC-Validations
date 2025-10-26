@@ -41,6 +41,7 @@ from checklist import Stats_check_fun
 from checklist import swaps_check_fun
 from checklist import seniority_check_fun
 from checklist import training_pairing_check
+from checklist import get_short_time_diffs
 
 
 schedule_date = st.date_input("Select schedule date")
@@ -235,6 +236,14 @@ if selected == "Constraints Validator":
             training_issue=training_pairing_check(flight_training, merged_df,output_master)
             placeholder6.markdown("✅ Training Pairings Validated")
 
+        with st.spinner("⚪️ Validating the time difference between AC..."):
+            time.sleep(1)
+            placeholder7 = st.empty()
+            get_short_time_diffs_df=get_short_time_diffs(crew_ac_stats)
+            placeholder7.markdown("✅ Time differences Validated")
+
+            
+
 
 
         # Print of Data
@@ -370,6 +379,16 @@ if selected == "Constraints Validator":
                 "The table above shows the list of crew who has violated the weekly sectors limits of 2 times more than 12 sectors",
                 unsafe_allow_html=True
                 )
+
+        with st.expander("Error in aircrafts swaps time difference"):
+            if get_short_time_diffs_df.empty:
+                st.markdown("No error into the time difference between aircrafts swaps",unsafe_allow_html=True)
+            else:
+                st.dataframe(get_short_time_diffs_df)
+                st.markdown(
+                "The table above shows the list where the assigned violated min 45 min difference between two aircraft assigment",
+                unsafe_allow_html=True
+                )
         
         with st.expander("Error in seniority pairings"):
             if pairings_issue_1.empty:
@@ -418,6 +437,7 @@ if selected == "Constraints Validator":
                 (sector_issue_1, 'Error in sectors 1'),
                 (sector_issue_2, 'Error in sectors 2'),
                 (swaps_issue, 'Error in AC swaps'),
+                (get_short_time_diffs_df,"AC swaps time"),
                 (pairings_issue_1, 'Error in seniority pairings'),
                 (LTC_check, 'Error in LTC pairings'),
                 (training_issue, 'Error in training pairings'),
