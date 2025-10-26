@@ -233,7 +233,7 @@ if selected == "Constraints Validator":
         with st.spinner("⚪️ Validating the Training Pairings..."):
             time.sleep(1)
             placeholder6 = st.empty()
-            training_issue=training_pairing_check(flight_training, merged_df,output_master)
+            training_issue=training_pairing_check(flight_training, Schedule_output)
             placeholder6.markdown("✅ Training Pairings Validated")
 
         with st.spinner("⚪️ Validating the time difference between AC..."):
@@ -241,8 +241,6 @@ if selected == "Constraints Validator":
             placeholder7 = st.empty()
             get_short_time_diffs_df=get_short_time_diffs(crew_ac_stats)
             placeholder7.markdown("✅ Time differences Validated")
-
-            
 
 
 

@@ -99,21 +99,31 @@ def seniority_check_fun(Schedule_output,merged_df):
     return pairings_issue_1, LTC_check
 
 
-def training_pairing_check(flight_training, merged_df,output_master):
-    def get_schedule_day(crew_code):
-        matched = merged_df.loc[merged_df['Crew code'] == crew_code, 'Schedule Day']
-        if not matched.empty:
-            return matched.values[0]
-        return None
+def training_pairing_check(flight_training, Schedule_output):
+    def get_crew_list(row):
+        code = row['Crew code']
+        typ = row['Crew type']
+        if typ == 'Instructor':
+            # Find unique first officers where captain == code
+            return ', '.join(Schedule_output[Schedule_output['Captain'] == code]['First Officer'].unique())
+        elif typ == 'Trainee':
+            # Find unique captains where first_officer == code
+            return ', '.join(Schedule_output[Schedule_output['First Officer'] == code]['Captain'].unique())
+        else:
+            return ""
+        
+    flight_training_instructor=flight_training.drop(["Training Type"],axis=1).rename(columns={"Instrutor":"Crew code","Trainee":"Paired with"})
+    flight_training_instructor["Crew type"]="Instructor"
 
-    flight_training["Instructor_availability_check"] = flight_training['Instrutor'].apply(get_schedule_day)
-    flight_training["Trainee_availability_check"] = flight_training['Trainee'].apply(get_schedule_day)
+    flight_training_trainee=flight_training.drop(["Training Type"],axis=1).rename(columns={"Trainee":"Crew code","Instrutor":"Paired with"})
+    flight_training_trainee["Crew type"]="Trainee"
 
-    flight_training=flight_training.merge(output_master[["Crew code","Starting from","Crew Type"]],left_on=["Instrutor"],right_on=["Crew code"]).drop(["Crew code"],axis=1).rename(columns={'Starting from': 'Instructor_starting_point',"Crew Type":"Instructor_crewtype"})
-    flight_training=flight_training.merge(output_master[["Crew code","Starting from","Crew Type"]],left_on=["Trainee"],right_on=["Crew code"]).drop(["Crew code"],axis=1).rename(columns={'Starting from': 'Trainee_starting_point',"Crew Type":"Trainee_crewtype"})
-
-
-    return flight_training
+    flight_training_master = pd.concat([flight_training_instructor, flight_training_trainee], axis=0, ignore_index=True)
+    flight_training_master['Actual Pairing'] = flight_training_master.apply(get_crew_list, axis=1)
+    flight_training_master=flight_training_master[flight_training_master["Paired with"]!=flight_training_master["Actual Pairing"]]
+    return flight_training_master
+        
+    
 
 def get_short_time_diffs(df, crew_code_col='Crew code', start_col='Start time', end_col='End time', ac_col='Aircraft Code', min_gap=45):
     counts = df[crew_code_col].value_counts()
