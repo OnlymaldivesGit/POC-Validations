@@ -8,7 +8,7 @@ next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).st
 
 
 available_status=["1","Li","LC"]
-leave_status=["X","AL","AU","PAL","EM","ML"]
+leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
 
 def Schedule_output_processing(Schedule_output):

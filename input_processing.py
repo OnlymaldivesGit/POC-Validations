@@ -4,7 +4,7 @@ import numpy as np
 from functools import reduce
 
 available_status=["1","Li","LC"]
-leave_status=["X","AL","AU","PAL","EM","ML"]
+leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
 
 

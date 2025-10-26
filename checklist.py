@@ -8,7 +8,7 @@
 # Schedule should match ( AC, Flights, Sectors etc)
 
 available_status=["1","Li","LC"]
-leave_status=["X","AL","AU","PAL","EM","ML"]
+leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
 
 def Schedule_check_fun(Schedule_output,Schedule_input):

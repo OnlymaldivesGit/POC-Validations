@@ -2,7 +2,7 @@ cols_empty = ['Crew code', 'Prev Day', 'Schedule Day', 'Next Day', 'Crew name','
 cols_zero = ['Max BH left','Max BH left ON', 'Max DH left', 'Max sectors left']
 
 available_status=["1","Li","LC"]
-leave_status=["X","AL","AU","PAL","EM","ML"]
+leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
 def input_validation_fun(merged_df):
       merged_df=merged_df[~merged_df['Schedule Day'].isin(leave_status)]

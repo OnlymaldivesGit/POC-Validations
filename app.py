@@ -11,7 +11,7 @@ import io as io_module
 
 
 available_status=["1","Li","LC"]
-leave_status=["X","AL","AU","PAL","EM","ML"]
+leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
 
 from input_processing import schedule_input_processing
@@ -404,24 +404,31 @@ if selected == "Constraints Validator":
         st.header("")
         output = io_module.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-            Schedule_check.to_excel(writer, sheet_name='Schedule_check', index=False)
-            crew_mistake_1.to_excel(writer, sheet_name='Crew with Training 1', index=False)
-            crew_mistake_11.to_excel(writer, sheet_name='Crew with Training 2', index=False)
-            crew_mistake_2.to_excel(writer, sheet_name='Error in Starting points', index=False)
-            crew_mistake_3.to_excel(writer, sheet_name='Error in Overnights', index=False)
-            aircraft_issue.to_excel(writer, sheet_name='Error in aircrafts', index=False)
-            Block_hour_issue_1.to_excel(writer, sheet_name='Error in Block hour 1', index=False)
-            Block_hour_issue_2.to_excel(writer, sheet_name='Error in Block hour 2', index=False)
-            duty_hour_issue.to_excel(writer, sheet_name='Error in duty hour', index=False)
-            sector_issue_1.to_excel(writer, sheet_name='Error in sectors 1', index=False)
-            sector_issue_2.to_excel(writer, sheet_name='Error in sectors 2', index=False)
-            swaps_issue.to_excel(writer, sheet_name='Error in AC swaps', index=False)
-            pairings_issue_1.to_excel(writer, sheet_name='Error in seniority pairings', index=False)
-            LTC_check.to_excel(writer, sheet_name='Error in LTC pairings', index=False)
-            training_issue.to_excel(writer, sheet_name='Error in training pairings', index=False)
-            comparison_master.to_excel(writer, sheet_name='comparison_master', index=False)
-            crew_ac_stats.to_excel(writer, sheet_name='crew_ac_stats', index=False)
-            output_master.to_excel(writer, sheet_name='output_master', index=False)
+
+            df_output = [
+                (Schedule_check, 'Schedule_check'),
+                (crew_mistake_1, 'Crew with Training 1'),
+                (crew_mistake_11, 'Crew with Training 2'),
+                (crew_mistake_2, 'Error in Starting points'),
+                (crew_mistake_3, 'Error in Overnights'),
+                (aircraft_issue, 'Error in aircrafts'),
+                (Block_hour_issue_1, 'Error in Block hour 1'),
+                (Block_hour_issue_2, 'Error in Block hour 2'),
+                (duty_hour_issue, 'Error in duty hour'),
+                (sector_issue_1, 'Error in sectors 1'),
+                (sector_issue_2, 'Error in sectors 2'),
+                (swaps_issue, 'Error in AC swaps'),
+                (pairings_issue_1, 'Error in seniority pairings'),
+                (LTC_check, 'Error in LTC pairings'),
+                (training_issue, 'Error in training pairings'),
+                (comparison_master, 'comparison_master'),
+                (crew_ac_stats, 'crew_ac_stats'),
+                (output_master, 'output_master')
+            ]
+
+            for df, sheet_name in df_output:
+                if not df.empty:
+                    df.to_excel(writer, sheet_name=sheet_name, index=False)
 
         output.seek(0)
         st.download_button(
