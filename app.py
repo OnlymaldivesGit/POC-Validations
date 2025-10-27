@@ -8,6 +8,8 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import time
 import io as io_module
+from datetime import date
+
 
 
 available_status=["1","Li","LC"]
@@ -49,6 +51,9 @@ schedule_date = schedule_date.strftime("%Y-%m-%d")
 prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
 next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
+start_date = date(2025, 9, 1).strftime("%Y-%m-%d")
+end_date = date(2025, 9, 8).strftime("%Y-%m-%d")
+
 with st.sidebar:
     selected = option_menu(
         menu_title="Modules",  # Sidebar title
@@ -62,23 +67,61 @@ with st.sidebar:
         orientation="vertical"  # Ensures vertical left-side layout
     )
 
+
+if start_date <= schedule_date <= end_date:
+    aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
+    crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
+    seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
+    logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
+    crew_master=pd.read_excel("Model Validations/Resources.xlsx")
+    expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
+    flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
+    month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
+    crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
+else:
+    aircraft_input = st.file_uploader("Select aircraft data", type=["xlsx", "xls"])
+    crew_aircraft_input = st.file_uploader("Select crew aircraft matrix", type=["xlsx", "xls"])
+    seniority_input = st.file_uploader("Select seniority pairing sheet", type=["xlsx", "xls"])
+    logsheet_input = st.file_uploader("Select the logsheet", type=["xlsx", "xls"])
+    crew_master_input = st.file_uploader("Select crew master data", type=["xlsx", "xls"])
+    expiry_data_input = st.file_uploader("Select the crew expiry", type=["xlsx", "xls"])
+    flight_training_input= st.file_uploader("Select the flight training", type=["xlsx", "xls"])
+    month_plan_input = st.file_uploader("Select the monthly plan", type=["xlsx", "xls"])
+    crew_stats_input = st.file_uploader("Select the crew stats", type=["xlsx", "xls"])
+
+
+    if aircraft_input is not None:
+        aircraft=pd.read_excel(aircraft_input)
+
+    if crew_aircraft_input is not None:
+        crew_aircraft=pd.read_excel(crew_aircraft_input)
+
+    if seniority_input is not None:
+        seniority=pd.read_excel(seniority_input)
+
+    if logsheet_input is not None:
+        logsheet=pd.read_excel(logsheet_input)
+
+    if crew_master_input is not None:
+        crew_master=pd.read_excel(crew_master_input)
+
+    if expiry_data_input is not None:
+        expiry_data=pd.read_excel(expiry_data_input)
+
+    if flight_training_input is not None:
+        flight_training=pd.read_excel(flight_training_input)
+
+    if month_plan_input is not None:
+        month_plan=pd.read_excel(month_plan_input)
+
+    if crew_stats_input is not None:
+        crew_stats=pd.read_excel(crew_stats_input,sheet_name=schedule_date)
+
+
+
+
 if selected == "Input Data Validator":
-    st.title("Input Data Validator")
-
     if st.button("Validate the data"):
-
-        aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
-        crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
-        seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
-        logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
-        crew_master=pd.read_excel("Model Validations/Resources.xlsx")
-        expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
-        flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
-        month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-        
-        
-
         aircraft=aircraft_processing(aircraft)
         crew_aircraft=crew_aircraft_processing(crew_aircraft)
         seniority=seniority_processing(seniority)
@@ -95,7 +138,6 @@ if selected == "Input Data Validator":
         input_issue_1,input_issue_2=input_validation_fun(merged_df)
 
         with st.spinner("⚪️ Validating the data..."):
-            time.sleep(0.5)
             placeholder1_1 = st.empty()
             placeholder1_1.markdown("✅ First Validation Completed")
             st.dataframe(input_issue_1)
@@ -105,7 +147,6 @@ if selected == "Input Data Validator":
             )
 
         with st.spinner("⚪️ Validating the data..."):
-            time.sleep(0.5)
             placeholder1_2 = st.empty()
             placeholder1_2.markdown("✅ Second Validation Completed")
             st.dataframe(input_issue_2)
@@ -133,36 +174,16 @@ if selected == "Input Data Validator":
 
 
 if selected == "Constraints Validator":
-
     input_flight_plan = st.file_uploader("Select input flight plan", type=["xlsx", "xls"])
     output_flight_plan = st.file_uploader("Select the solver output", type=["xlsx", "xls"])
 
-    st.title("Constraints Validator")
+    if input_flight_plan is not None:
+        Schedule_input=pd.read_excel(input_flight_plan)
+
+    if output_flight_plan is not None:
+        Schedule_output=pd.read_excel(output_flight_plan)
+
     if st.button("Validate the data"):
-        aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
-        crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
-        seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
-        logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
-        crew_master=pd.read_excel("Model Validations/Resources.xlsx")
-        expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
-        flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
-        month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-
-        
-        
-
-        if input_flight_plan is None:
-            Schedule_input=pd.read_excel("Model Validations/Flight Plan.xlsx")
-        else:
-            Schedule_input=pd.read_excel(input_flight_plan)
-
-        if output_flight_plan is None:
-            Schedule_output=pd.read_excel("Model Validations/Model Output.xlsx")
-        else:
-            Schedule_output=pd.read_excel(output_flight_plan)
-
-
 
         aircraft=aircraft_processing(aircraft)
         crew_aircraft=crew_aircraft_processing(crew_aircraft)
@@ -198,49 +219,41 @@ if selected == "Constraints Validator":
         training_non_outstations = on_training[(on_training["Outstation airport"].isin(["", "MLE"]))]
 
         with st.spinner("⚪️ Validating the Schedule..."):
-            # time.sleep(1)
             placeholder1 = st.empty()
             Schedule_check=Schedule_check_fun(Schedule_output,Schedule_input)
             placeholder1.markdown("✅ Schedule Validated")
 
         with st.spinner("⚪️ Validating the Crew Dependency..."):
-            # time.sleep(1)
             placeholder2 = st.empty()
             crew_mistake_1, crew_mistake_11,crew_mistake_2,crew_mistake_3=crew_check_fun(comparison_master,available_working)
             placeholder2.markdown("✅ Crew Dependency Validated")
 
         with st.spinner("⚪️ Validating the Aicraft Dependency..."):
-            # time.sleep(1)
             placeholder3 = st.empty()
             aircraft_issue=aircraft_check(crew_ac_stats)
             placeholder3.markdown("✅ Aicraft Dependency Validated")
 
         with st.spinner("⚪️ Validating the crew FTL Depenedency..."):
-            # time.sleep(1)
             placeholder4 = st.empty()
             Block_hour_issue_1,Block_hour_issue_2,duty_hour_issue,sector_issue_1,sector_issue_2=Stats_check_fun(available_working)
             placeholder4.markdown("✅ Crew FTL Dependency Validated")
 
         with st.spinner("⚪️ Validating the crew swaps..."):
-            # time.sleep(1)
             placeholder5 = st.empty()
             swaps_issue=swaps_check_fun(output_master)
             placeholder5.markdown("✅ Crew swaps Validated")
 
         with st.spinner("⚪️ Validating the seniority pairings..."):
-            # time.sleep(1)
             placeholder6 = st.empty()
             pairings_issue_1, LTC_check=seniority_check_fun(Schedule_output,merged_df)
             placeholder6.markdown("✅ Seniority pairings Validated")
 
         with st.spinner("⚪️ Validating the Training Pairings..."):
-            # time.sleep(1)
             placeholder6 = st.empty()
             training_issue=training_pairing_check(flight_training, Schedule_output)
             placeholder6.markdown("✅ Training Pairings Validated")
 
         with st.spinner("⚪️ Validating the time difference between AC..."):
-            # time.sleep(1)
             placeholder7 = st.empty()
             get_short_time_diffs_df=get_short_time_diffs(crew_ac_stats)
             placeholder7.markdown("✅ Time differences Validated")
