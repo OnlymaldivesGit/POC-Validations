@@ -71,7 +71,7 @@ def output_master_processing(Schedule_output_2):
     output_master['Duty hours'] = (output_master['End time'] - output_master['Start time']) / pd.Timedelta(hours=1)+(75/60)
     output_master.drop(['Start time','End time'],axis=1,inplace=True)
     output_master["Working Status"]=1
-    return output_master
+    return output_master,output_crew_stats
 
 def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
     idx_minSTD = Schedule_output_2.groupby('Group id')['STD -  Scheduled Departure'].idxmin()
@@ -84,13 +84,13 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
 
     crew_ac_stats=idx_minSTD_output.merge(idx_maxSTA_output,on=["Group id","Crew code","Assigned AC"])
     crew_ac_stats=crew_ac_stats.merge(aircraft,left_on=["Assigned AC"],right_on=["Aircraft Code"])
-    print(crew_ac_stats)
+    
 
     def get_qualification(x):
         matched = crew_aircraft.loc[crew_aircraft['Crew code'] == x['Crew code'], x['Aircraft Type']]
         if not matched.empty:
             return matched.values[0]
-        return None  # or 0, 'N/A', etc.
+        return "Not found"  # or 0, 'N/A', etc.
 
     crew_ac_stats['qualified'] = crew_ac_stats.apply(get_qualification, axis=1)
     

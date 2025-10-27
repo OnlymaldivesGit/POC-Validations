@@ -180,7 +180,10 @@ if selected == "Constraints Validator":
 
         Schedule_output=Schedule_output_processing(Schedule_output)
         Schedule_output_2=Schedule_output_processing_2(Schedule_output)
-        output_master=output_master_processing(Schedule_output_2)
+        output_master,output_crew_stats=output_master_processing(Schedule_output_2)
+
+        print(output_crew_stats)
+
         crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
 
         comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
@@ -195,49 +198,49 @@ if selected == "Constraints Validator":
         training_non_outstations = on_training[(on_training["Outstation airport"].isin(["", "MLE"]))]
 
         with st.spinner("⚪️ Validating the Schedule..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder1 = st.empty()
             Schedule_check=Schedule_check_fun(Schedule_output,Schedule_input)
             placeholder1.markdown("✅ Schedule Validated")
 
         with st.spinner("⚪️ Validating the Crew Dependency..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder2 = st.empty()
             crew_mistake_1, crew_mistake_11,crew_mistake_2,crew_mistake_3=crew_check_fun(comparison_master,available_working)
             placeholder2.markdown("✅ Crew Dependency Validated")
 
         with st.spinner("⚪️ Validating the Aicraft Dependency..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder3 = st.empty()
             aircraft_issue=aircraft_check(crew_ac_stats)
             placeholder3.markdown("✅ Aicraft Dependency Validated")
 
-        with st.spinner("⚪️ Validating the Crew Stats Depenedency..."):
-            time.sleep(1)
+        with st.spinner("⚪️ Validating the crew FTL Depenedency..."):
+            # time.sleep(1)
             placeholder4 = st.empty()
             Block_hour_issue_1,Block_hour_issue_2,duty_hour_issue,sector_issue_1,sector_issue_2=Stats_check_fun(available_working)
-            placeholder4.markdown("✅ Crew Stats Dependency Validated")
+            placeholder4.markdown("✅ Crew FTL Dependency Validated")
 
         with st.spinner("⚪️ Validating the crew swaps..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder5 = st.empty()
             swaps_issue=swaps_check_fun(output_master)
             placeholder5.markdown("✅ Crew swaps Validated")
 
         with st.spinner("⚪️ Validating the seniority pairings..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder6 = st.empty()
             pairings_issue_1, LTC_check=seniority_check_fun(Schedule_output,merged_df)
             placeholder6.markdown("✅ Seniority pairings Validated")
 
         with st.spinner("⚪️ Validating the Training Pairings..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder6 = st.empty()
             training_issue=training_pairing_check(flight_training, Schedule_output)
             placeholder6.markdown("✅ Training Pairings Validated")
 
         with st.spinner("⚪️ Validating the time difference between AC..."):
-            time.sleep(1)
+            # time.sleep(1)
             placeholder7 = st.empty()
             get_short_time_diffs_df=get_short_time_diffs(crew_ac_stats)
             placeholder7.markdown("✅ Time differences Validated")
@@ -265,18 +268,18 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Training crew at base"):
+        with st.expander("Error in crew on Training"):
             if crew_mistake_1.empty:
-                st.markdown("No such errors",unsafe_allow_html=True)
+                st.markdown("No error with crew who are on training and at base",unsafe_allow_html=True)
             else:
                 st.dataframe(crew_mistake_1)
                 st.markdown(
                 "The table above shows the list of crew who are on training and at base last night but has been scheduled to Flight ",
                 unsafe_allow_html=True
                 )
-        with st.expander("Error in Training crew outstation"):
+            
             if crew_mistake_11.empty:
-                st.markdown("",unsafe_allow_html=True)
+                st.markdown("No error with crew who are on training and at outstation",unsafe_allow_html=True)
             else:
                 st.dataframe(crew_mistake_11)
                 st.markdown(
@@ -305,7 +308,7 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in aircrafts"):
+        with st.expander("Error in aircraft eligibity"):
             if aircraft_issue.empty:
                 st.markdown("No error into the aircarft assigment",unsafe_allow_html=True)
             else:
@@ -316,27 +319,26 @@ if selected == "Constraints Validator":
                 )
 
 
-        with st.expander("Error in Block hour 1"):
+        with st.expander("Error in Block hour limitations"):
             if Block_hour_issue_1.empty:
-                st.markdown("No violation of block hour limitations",unsafe_allow_html=True)
+                st.markdown("No violation of block hour limitations for crew ending at MLE",unsafe_allow_html=True)
             else:
                 st.dataframe(Block_hour_issue_1)
                 st.markdown(
-                "The table above shows the list of crew who has violated the block hour limits",
+                "The table above shows the list of crew who has violated the block hour limits (Ending at MLE)",
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in Block hour 2"): 
             if Block_hour_issue_2.empty:
-                st.markdown("No violation of block hour limitations",unsafe_allow_html=True)
+                st.markdown("No violation of block hour limitations for crew ending outstation",unsafe_allow_html=True)
             else:
                 st.dataframe(Block_hour_issue_2)
                 st.markdown(
-                "The table above shows the list of crew who has violated the block hour limits for the overnights",
+                "The table above shows the list of crew who has violated the block hour limits (Ending outstation)",
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in duty hour"):
+        with st.expander("Error in monthly duty hour"):
             if duty_hour_issue.empty:
                 st.markdown("No violation of duty hour limitations",unsafe_allow_html=True)
             else:
@@ -346,10 +348,20 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
+        with st.expander("Error in sectors limitation"):
+            daily_sector_violation=output_crew_stats[output_crew_stats["Total sectors"]>14]
+            
+            if daily_sector_violation.empty:
+                st.markdown("No violation of daily sector limitations",unsafe_allow_html=True)
+            else:
+                st.dataframe(duty_hour_issue)
+                st.markdown(
+                "The table above shows the list of crew who has violated the daily sectors limit of 14",
+                unsafe_allow_html=True
+                )
 
-        with st.expander("Error in sectors 1"):
             if sector_issue_1.empty:
-                st.markdown("No violation of sectors limitations",unsafe_allow_html=True)
+                st.markdown("No violation of Weekly sectors limit",unsafe_allow_html=True)
             else:
                 st.dataframe(sector_issue_1)
                 st.markdown(
@@ -357,9 +369,8 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in sectors 2"):
             if sector_issue_2.empty:
-                st.markdown("No violation of sectors limitations",unsafe_allow_html=True)
+                st.markdown("No violation of more than 12 sectors limitations",unsafe_allow_html=True)
             else:
                 st.dataframe(sector_issue_2)
                 st.markdown(
@@ -368,17 +379,16 @@ if selected == "Constraints Validator":
                 )
             
             
-        with st.expander("Error in AC swaps"):
+        with st.expander("Error in Aircraft Swaps limitations"):
             if swaps_issue.empty:
-                st.markdown("No violation of swap rules",unsafe_allow_html=True)
+                st.markdown("No violation of swap count",unsafe_allow_html=True)
             else:
                 st.dataframe(swaps_issue)
                 st.markdown(
-                "The table above shows the list of crew who has violated the weekly sectors limits of 2 times more than 12 sectors",
+                "The table above shows the list of crew who has violated the aircraft swap limit of 1",
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in aircrafts swaps time difference"):
             if get_short_time_diffs_df.empty:
                 st.markdown("No error into the time difference between aircrafts swaps",unsafe_allow_html=True)
             else:
@@ -388,7 +398,7 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
         
-        with st.expander("Error in seniority pairings"):
+        with st.expander("Error in pairings rules"):
             if pairings_issue_1.empty:
                 st.markdown("No violation of senior junior pairings",unsafe_allow_html=True)
             else:
@@ -398,7 +408,6 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in LTC pairings"):
             if LTC_check.empty:
                 st.markdown("No violation of LTC Pairings",unsafe_allow_html=True)
             else:
@@ -408,7 +417,6 @@ if selected == "Constraints Validator":
                 unsafe_allow_html=True
                 )
 
-        with st.expander("Error in training pairings"):
             if training_issue.empty:
                 st.markdown("No violation of training pairings",unsafe_allow_html=True)
             else:
