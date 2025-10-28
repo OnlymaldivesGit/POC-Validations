@@ -27,6 +27,8 @@ from input_processing import  expiry_data_processing
 from input_processing import  seniority_processing
 from input_processing import  crew_master_processing
 from input_processing import merged_data_fun
+from input_processing import crew_stats_xml 
+
 
 
 
@@ -46,77 +48,112 @@ from checklist import training_pairing_check
 from checklist import get_short_time_diffs
 
 
-schedule_date = st.date_input("Select schedule date")
-schedule_date = schedule_date.strftime("%Y-%m-%d")
-prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
-next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
-
-start_date = date(2025, 9, 1).strftime("%Y-%m-%d")
-end_date = date(2025, 9, 8).strftime("%Y-%m-%d")
 
 with st.sidebar:
     selected = option_menu(
         menu_title="Modules",  # Sidebar title
         options=[
+            "Crew stats generator",
             "Input Data Validator", 
             "Constraints Validator"
         ],
-        icons=["file-earmark-excel",  "bar-chart"],
+        icons=["file-earmark-excel","file-earmark-excel",  "bar-chart"],
         menu_icon="gear",  # Top icon
         default_index=0,
         orientation="vertical"  # Ensures vertical left-side layout
     )
 
+    
+if selected == "Crew stats generator":
+    crewstats_xml = st.file_uploader("Select crew stats macro", type=["xlsm"])
 
-if start_date <= schedule_date <= end_date:
-    aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
-    crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
-    seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
-    logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
-    crew_master=pd.read_excel("Model Validations/Resources.xlsx")
-    expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
-    flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
-    month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-    crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
-else:
-    aircraft_input = st.file_uploader("Select aircraft data", type=["xlsx", "xls"])
-    crew_aircraft_input = st.file_uploader("Select crew aircraft matrix", type=["xlsx", "xls"])
-    seniority_input = st.file_uploader("Select seniority pairing sheet", type=["xlsx", "xls"])
-    logsheet_input = st.file_uploader("Select the logsheet", type=["xlsx", "xls"])
-    crew_master_input = st.file_uploader("Select crew master data", type=["xlsx", "xls"])
-    expiry_data_input = st.file_uploader("Select the crew expiry", type=["xlsx", "xls"])
-    flight_training_input= st.file_uploader("Select the flight training", type=["xlsx", "xls"])
-    month_plan_input = st.file_uploader("Select the monthly plan", type=["xlsx", "xls"])
-    crew_stats_input = st.file_uploader("Select the crew stats", type=["xlsx", "xls"])
+    if st.button("Generate the report"):
+        if crewstats_xml is not None:
+            sectors = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="Sectors")
+            flt = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="FLT")
+            day_27th = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="27 Days")
+            day_364th = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="364 Days")
+
+        crew_stats_output=crew_stats_xml(sectors,flt,day_27th,day_364th)
+
+        output = io_module.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            crew_stats_output.to_excel(writer, sheet_name='crew stats', index=False)
+
+        output.seek(0)
+
+        st.download_button(
+            label="📥 Download crew stats",
+            data=output,
+            file_name="Crewstats.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
 
 
-    if aircraft_input is not None:
-        aircraft=pd.read_excel(aircraft_input)
+if selected == "Input Data Validator" or selected == "Constraints Validator":
 
-    if crew_aircraft_input is not None:
-        crew_aircraft=pd.read_excel(crew_aircraft_input)
+    schedule_date = st.date_input("Select schedule date")
+    schedule_date = schedule_date.strftime("%Y-%m-%d")
+    prev_day = (datetime.strptime(schedule_date, "%Y-%m-%d") - timedelta(days=1)).strftime("%Y-%m-%d")
+    next_day = (datetime.strptime(schedule_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
 
-    if seniority_input is not None:
-        seniority=pd.read_excel(seniority_input)
+    start_date = date(2025, 9, 1).strftime("%Y-%m-%d")
+    end_date = date(2025, 9, 8).strftime("%Y-%m-%d")
 
-    if logsheet_input is not None:
-        logsheet=pd.read_excel(logsheet_input)
+    if start_date <= schedule_date <= end_date:
+        aircraft=pd.read_excel("Model Validations/Aircrafts.xlsx")
+        crew_aircraft=pd.read_excel("Model Validations/Crew AC Matrix.xlsx")
+        seniority=pd.read_excel("Model Validations/Crew Pairing.xlsx")
+        logsheet=pd.read_excel("Model Validations/Log sheet.xlsx")
+        crew_master=pd.read_excel("Model Validations/Resources.xlsx")
+        expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
+        flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
+        month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
+        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
+    else:
+        aircraft_input = st.file_uploader("Select aircraft data", type=["xlsx", "xls"])
+        crew_aircraft_input = st.file_uploader("Select crew aircraft matrix", type=["xlsx", "xls"])
+        seniority_input = st.file_uploader("Select seniority pairing sheet", type=["xlsx", "xls"])
+        logsheet_input = st.file_uploader("Select the logsheet", type=["xlsx", "xls"])
+        crew_master_input = st.file_uploader("Select crew master data", type=["xlsx", "xls"])
+        expiry_data_input = st.file_uploader("Select the crew expiry", type=["xlsx", "xls"])
+        flight_training_input= st.file_uploader("Select the flight training", type=["xlsx", "xls"])
+        month_plan_input = st.file_uploader("Select the monthly plan", type=["xlsx", "xls"])
+        crew_stats_input = st.file_uploader("Select the crew stats", type=["xlsx", "xls"])
 
-    if crew_master_input is not None:
-        crew_master=pd.read_excel(crew_master_input)
 
-    if expiry_data_input is not None:
-        expiry_data=pd.read_excel(expiry_data_input)
+        if aircraft_input is not None:
+            aircraft=pd.read_excel(aircraft_input)
 
-    if flight_training_input is not None:
-        flight_training=pd.read_excel(flight_training_input)
+        if crew_aircraft_input is not None:
+            crew_aircraft=pd.read_excel(crew_aircraft_input)
 
-    if month_plan_input is not None:
-        month_plan=pd.read_excel(month_plan_input)
+        if seniority_input is not None:
+            seniority=pd.read_excel(seniority_input)
 
-    if crew_stats_input is not None:
-        crew_stats=pd.read_excel(crew_stats_input,sheet_name=schedule_date)
+        if logsheet_input is not None:
+            logsheet=pd.read_excel(logsheet_input)
 
+        if crew_master_input is not None:
+            crew_master=pd.read_excel(crew_master_input)
+
+        if expiry_data_input is not None:
+            expiry_data=pd.read_excel(expiry_data_input)
+
+        if flight_training_input is not None:
+            flight_training=pd.read_excel(flight_training_input)
+
+        if month_plan_input is not None:
+            month_plan=pd.read_excel(month_plan_input)
+
+        if crew_stats_input is not None:
+            crew_stats=pd.read_excel(crew_stats_input,sheet_name=schedule_date)
+
+
+
+
+
+    
 
 
 

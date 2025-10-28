@@ -6,6 +6,47 @@ from functools import reduce
 available_status=["1","Li","LC"]
 leave_status=["X","AL","AU","PAL","EM","ML","M"]
 
+def fun(x):
+  import datetime
+  if pd.isnull(x):
+      return np.nan
+  if isinstance(x, float):
+      return x
+  if isinstance(x, datetime.time):
+      return x.hour + x.minute / 60
+  if isinstance(x, str) and ':' in x:
+      hour, minute = x.split(':')[0:2]
+      return int(hour) + int(minute) / 60
+  return 0
+
+
+
+
+def crew_stats_xml(sectors,flt,day_27th,day_364th):
+    sectors = sectors[~sectors['Crew'].str.contains('Total|Applied', na=False)]
+
+    flt = flt[~flt['Crew'].str.contains('Total|Applied', na=False)]
+    flt.drop(["Job Title","7 Days Flight Time"],axis=1,inplace=True)
+
+    day_27th = day_27th[~day_27th['Resource No.'].str.contains('Total|Applied', na=False)]
+    day_27th=day_27th[['Resource No.',"Flight time"]]
+    day_27th.columns=['Crew','27th Day FT']
+
+    day_364th = day_364th[~day_364th['Ressource No.'].str.contains('Total|Applied', na=False)]
+    day_364th=day_364th[['Ressource No.'	,"Flight time"]]
+    day_364th.columns=['Crew','364th Day FT']
+
+    dfs = [flt,sectors, day_27th, day_364th]
+    merged_df = reduce(lambda left, right: pd.merge(left, right, on='Crew', how='left'), dfs)
+    merged_df=merged_df[['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '27th Day FT','364th Day FT', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D' ]]
+    merged_df.columns=['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', ]
+
+    return merged_df
+
+
+
+
+
 
 
 def schedule_input_processing(Schedule_input):
