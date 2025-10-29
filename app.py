@@ -243,10 +243,7 @@ if selected == "Constraints Validator":
         Schedule_output_2=Schedule_output_processing_2(Schedule_output)
         output_master,output_crew_stats=output_master_processing(Schedule_output_2)
 
-        print(output_crew_stats)
-
         crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
-
         comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
 
         available_working = comparison_master[(comparison_master["Schedule Day"].isin(available_status)) & (~comparison_master["Working Status"].isna())]
@@ -407,7 +404,7 @@ if selected == "Constraints Validator":
             if daily_sector_violation.empty:
                 st.markdown("No violation of daily sector limitations",unsafe_allow_html=True)
             else:
-                st.dataframe(duty_hour_issue)
+                st.dataframe(daily_sector_violation)
                 st.markdown(
                 "The table above shows the list of crew who has violated the daily sectors limit of 14",
                 unsafe_allow_html=True
