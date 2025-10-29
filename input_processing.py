@@ -9,7 +9,7 @@ leave_status=["X","AL","AU","PAL","EM","ML","M"]
 def fun(x):
   import datetime
   if pd.isnull(x):
-      return np.nan
+      return 0
   if isinstance(x, float):
       return x
   if isinstance(x, datetime.time):
@@ -41,17 +41,19 @@ def crew_stats_xml(sectors,flt,day_27th,day_364th):
     merged_df=merged_df[['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '27th Day FT','364th Day FT', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D' ]]
     merged_df.columns=['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', ]
 
-    cols= ['28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time']
     merged_df_2=merged_df.copy()
+
+    cols= ['28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time']
     merged_df_2[cols] = merged_df_2[cols].applymap(fun)
 
-    merged_df_2=merged_df_2[['Crew','-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
+    merged_df_2=merged_df_2[["Crew",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
 
     merged_df_2["Min BH left"]=np.minimum(100 - merged_df_2["28 Days Flight Time"],1000 - merged_df_2["365 Days Flight Time"])
     merged_df_2["Min BH left ON"]=np.minimum(102 - merged_df_2["28 Days Flight Time"]-merged_df_2["28th Day.Flight time"],1002 - merged_df_2["365 Days Flight Time"]-merged_df_2["365th Day.Flight time"])
     merged_df_2["Min DH"]=210-merged_df_2["28 Days Duty Time"]
     merged_df_2["Sectors Left"] = 48 - merged_df_2[["-1D", "-2D", "-3D", "-4D","-5D","-6D"]].sum(axis=1)
     merged_df_2["More than 12"]=2 - (merged_df_2['-1D'] > 12).astype(int) + (merged_df_2['-2D'] > 12).astype(int) + (merged_df_2['-3D'] > 12).astype(int)
+    merged_df_2.columns= ["Crew code",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', '28 Days BH','27th Day BH', '365 Days BH', '364th Day BH','28 Days DT', 'Min BH left', 'Min BH left ON', 'Min DH','Sectors Left', 'More than 12']
 
     return merged_df,merged_df_2
 
