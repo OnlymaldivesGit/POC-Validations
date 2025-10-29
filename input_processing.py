@@ -41,7 +41,19 @@ def crew_stats_xml(sectors,flt,day_27th,day_364th):
     merged_df=merged_df[['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '27th Day FT','364th Day FT', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D' ]]
     merged_df.columns=['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', ]
 
-    return merged_df
+    cols= ['28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time']
+    merged_df_2=merged_df.copy()
+    merged_df_2[cols] = merged_df_2[cols].applymap(fun)
+
+    merged_df_2=merged_df_2[['Crew','-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
+
+    merged_df_2["Min BH left"]=np.minimum(100 - merged_df_2["28 Days Flight Time"],1000 - merged_df_2["365 Days Flight Time"])
+    merged_df_2["Min BH left ON"]=np.minimum(102 - merged_df_2["28 Days Flight Time"]-merged_df_2["28th Day.Flight time"],1002 - merged_df_2["365 Days Flight Time"]-merged_df_2["365th Day.Flight time"])
+    merged_df_2["Min DH"]=210-merged_df_2["28 Days Duty Time"]
+    merged_df_2["Sectors Left"] = 48 - merged_df_2[["-1D", "-2D", "-3D", "-4D","-5D","-6D"]].sum(axis=1)
+    merged_df_2["More than 12"]=2 - (merged_df_2['-1D'] > 12).astype(int) + (merged_df_2['-2D'] > 12).astype(int) + (merged_df_2['-3D'] > 12).astype(int)
+
+    return merged_df,merged_df_2
 
 
 
@@ -60,20 +72,20 @@ def schedule_input_processing(Schedule_input):
     return Schedule_input
 
 def aircraft_processing(aircraft):
-    aircraft=aircraft[["No.","Aircraft Type"]]
+    aircraft=aircraft[["Aircraft code","Aircraft Type"]]
     aircraft.columns=["Aircraft Code","Aircraft Type"]
     return aircraft
 
 def crew_aircraft_processing(crew_aircraft):
-    crew_aircraft['Crew'] = crew_aircraft['Crew'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
-    crew_aircraft.columns=['Crew code', '100', '200', '300', '400', '200-G950', '300-G600', '300-G950',
-       '300-GI275']
+    crew_aircraft['Crew code'] = crew_aircraft['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
+    crew_aircraft=crew_aircraft[['Crew code', '100', '200', '300', '400', '200-G950', '300-G600', '300-G950',
+       '300-GI275']]
     return crew_aircraft
 
 
 def crew_stats_processing(crew_stats):
-    crew_stats=crew_stats[["Crew",'Min BH left', 'Min BH left ON', 'Min DH', 'Sectors Left','More than 12']]
-    crew_stats['Crew'] = crew_stats['Crew'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
+    crew_stats=crew_stats[["Crew code",'Min BH left', 'Min BH left ON', 'Min DH', 'Sectors Left','More than 12']]
+    crew_stats['Crew code'] = crew_stats['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
     crew_stats.columns=['Crew code', 'Max BH left', 'Max BH left ON', 'Max DH left', 'Max sectors left',
         'Max more than 12 sectors']
     return crew_stats
@@ -92,7 +104,8 @@ def logsheet_processing(logsheet,prev_day):
         value_name='Crew code'
     )
     logsheet['Crew code'] = logsheet['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
-    logsheet['Actual Time of Arrival'] = pd.to_datetime(logsheet['Actual Time of Arrival'], format='%H:%M')
+    logsheet['Actual Time of Arrival'] = pd.to_datetime(logsheet['Actual Time of Arrival'], format='%H:%M',errors='coerce')
+
 
     idx = logsheet.groupby('Crew code')['Actual Time of Arrival'].idxmax()
     logsheet = logsheet.loc[idx]
@@ -116,23 +129,23 @@ def month_plan_processing(month_plan,schedule_date,prev_day,next_day):
     return month_plan
 
 def flight_training_processing(flight_training,schedule_date):
-    flight_training['Instrutor'] = flight_training['Instrutor'].str.strip()
+    flight_training['Instructor'] = flight_training['Instructor'].str.strip()
     flight_training['Trainee'] = flight_training['Trainee'].str.strip()
     flight_training=flight_training[flight_training["Date"]==schedule_date]
     return flight_training
 
 
 def expiry_data_processing(expiry_data):
-    expiry_data=expiry_data[["No.","Status"]]
+    expiry_data=expiry_data[["Crew code","Expiry"]]
     expiry_data.columns=["Crew code","Expiry status"]
     expiry_data['Crew code'] = expiry_data['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
-    expiry_data['Expiry status']=expiry_data['Expiry status'].astype(str)
+    # expiry_data['Expiry status']=expiry_data['Expiry status'].astype(str)
     return expiry_data
 
 
 
 def seniority_processing(seniority):
-    seniority=seniority[['CODE', 'Seniority Level',"LTC/CCI"]]
+    seniority=seniority[['Crew code', 'Seniority Level',"LTC/CCI"]]
     seniority.columns=["Crew code","Seniority Level","Is Instructor?"]
     seniority['Crew code'] = seniority['Crew code'].str.strip()
     return seniority
@@ -140,7 +153,7 @@ def seniority_processing(seniority):
 
 
 def crew_master_processing(crew_master):
-    crew_master=crew_master[['No.', 'Name', 'Flight personnel type']]
+    crew_master=crew_master[['Crew code', 'Crew name', 'Flight personnel type']]
     crew_master.columns=["Crew code","Crew name","Crew Type"]
     crew_master.dropna(subset=["Crew code"], inplace=True)
     crew_master['Crew code'] = crew_master['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()

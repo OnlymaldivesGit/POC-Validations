@@ -74,11 +74,14 @@ if selected == "Crew stats generator":
             day_27th = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="27 Days")
             day_364th = pd.read_excel(crewstats_xml, engine='openpyxl', sheet_name="364 Days")
 
-        crew_stats_output=crew_stats_xml(sectors,flt,day_27th,day_364th)
+        crew_stats_output,crew_stats_output_2=crew_stats_xml(sectors,flt,day_27th,day_364th)
 
         output = io_module.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             crew_stats_output.to_excel(writer, sheet_name='crew stats', index=False)
+            crew_stats_output_2.to_excel(writer, sheet_name='crew stats validator', index=False)
+
+        st.dataframe(crew_stats_output_2)
 
         output.seek(0)
 
@@ -109,7 +112,7 @@ if selected == "Input Data Validator" or selected == "Constraints Validator":
         expiry_data=pd.read_excel("Model Validations/Training Expiry.xlsx")
         flight_training=pd.read_excel("Model Validations/Training Pairings.xlsx")
         month_plan=pd.read_excel("Model Validations/Month plan.xlsx")
-        crew_stats=pd.read_excel("Crew Stats.xlsx",sheet_name=schedule_date)
+        crew_stats=pd.read_excel("Model Validations/Crew Stats.xlsx",sheet_name=schedule_date)
     else:
         aircraft_input = st.file_uploader("Select aircraft data", type=["xlsx", "xls"])
         crew_aircraft_input = st.file_uploader("Select crew aircraft matrix", type=["xlsx", "xls"])
