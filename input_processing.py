@@ -122,12 +122,14 @@ def logsheet_processing(logsheet,prev_day):
 def month_plan_processing(month_plan,schedule_date,prev_day,next_day):
     month_plan.columns = [str(col).split()[0] if str(col).startswith('2025-') else col for col in month_plan.columns]
     month_plan['Crew code'] = month_plan['Crew code'].str.strip()
+    month_plan['Crew code'] = month_plan['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
     month_plan=month_plan[['Crew code',prev_day,schedule_date,next_day]]
     month_plan.columns=["Crew code","Prev Day","Schedule Day","Next Day"]
     month_plan = month_plan[~month_plan['Schedule Day'].isna()]
     month_plan["Prev Day"]=month_plan["Prev Day"].astype(str)
     month_plan["Schedule Day"]=month_plan["Schedule Day"].astype(str)
     month_plan["Next Day"]=month_plan["Next Day"].astype(str)
+    
     return month_plan
 
 def flight_training_processing(flight_training,schedule_date):
@@ -141,7 +143,6 @@ def expiry_data_processing(expiry_data):
     expiry_data=expiry_data[["Crew code","Expiry"]]
     expiry_data.columns=["Crew code","Expiry status"]
     expiry_data['Crew code'] = expiry_data['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
-    # expiry_data['Expiry status']=expiry_data['Expiry status'].astype(str)
     return expiry_data
 
 
@@ -150,6 +151,7 @@ def seniority_processing(seniority):
     seniority=seniority[['Crew code', 'Seniority Level',"LTC/CCI"]]
     seniority.columns=["Crew code","Seniority Level","Is Instructor?"]
     seniority['Crew code'] = seniority['Crew code'].str.strip()
+    seniority['Crew code'] = seniority['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
     return seniority
 
 
@@ -159,6 +161,7 @@ def crew_master_processing(crew_master):
     crew_master.columns=["Crew code","Crew name","Crew Type"]
     crew_master.dropna(subset=["Crew code"], inplace=True)
     crew_master['Crew code'] = crew_master['Crew code'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
+    crew_master['Crew code'] = crew_master['Crew code'].str.strip()
     return crew_master
 
 
