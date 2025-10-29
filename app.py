@@ -298,6 +298,19 @@ if selected == "Constraints Validator":
 
 
         # Print of Data
+
+
+        with st.expander("Standby crew"):
+            if Standby_crew.empty:
+                st.markdown("All crew has been utilized",unsafe_allow_html=True)
+            else:
+                st.dataframe(Standby_crew)
+                st.markdown(
+                "Following crew has been kept for standby for the full day",
+                unsafe_allow_html=True
+                )
+
+
         with st.expander("Schedule check"):
             if Schedule_check.empty:
                 st.markdown("No error in Schedule",unsafe_allow_html=True)
