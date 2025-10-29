@@ -112,10 +112,10 @@ def training_pairing_check(flight_training, Schedule_output):
         else:
             return ""
         
-    flight_training_instructor=flight_training.drop(["Training Type"],axis=1).rename(columns={"Instrutor":"Crew code","Trainee":"Paired with"})
+    flight_training_instructor=flight_training.drop(["Training Type"],axis=1).rename(columns={"Instructor":"Crew code","Trainee":"Paired with"})
     flight_training_instructor["Crew type"]="Instructor"
 
-    flight_training_trainee=flight_training.drop(["Training Type"],axis=1).rename(columns={"Trainee":"Crew code","Instrutor":"Paired with"})
+    flight_training_trainee=flight_training.drop(["Training Type"],axis=1).rename(columns={"Trainee":"Crew code","Instructor":"Paired with"})
     flight_training_trainee["Crew type"]="Trainee"
 
     flight_training_master = pd.concat([flight_training_instructor, flight_training_trainee], axis=0, ignore_index=True)
