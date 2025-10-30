@@ -57,6 +57,8 @@ def aircraft_check(crew_ac_stats):
 def Stats_check_fun(available_working):
     Block_hour_issue_1=available_working[available_working["Block hours"]>available_working["Max BH left"]]
     Block_hour_issue_2=available_working[available_working["Block hours"]>available_working["Max BH left ON"]]
+    # print(Block_hour_issue_2)
+    Block_hour_issue_2=Block_hour_issue_2[Block_hour_issue_2["Ending at"]!="MLE"]
     duty_hour_issue=available_working[available_working['Duty hours']>available_working["Max DH left"]]
     sector_issue_1=available_working[available_working['Total sectors']>available_working["Max sectors left"]]
     sector_issue_2 = available_working[((available_working['Total sectors'] > 12) & (available_working['Max more than 12 sectors'] == 0))]
