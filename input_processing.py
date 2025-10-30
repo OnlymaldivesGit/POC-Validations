@@ -49,7 +49,7 @@ def crew_stats_xml(sectors,flt,day_27th,day_364th):
     merged_df_2=merged_df_2[["Crew",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
 
     merged_df_2["Min BH left"]=np.minimum(100 - merged_df_2["28 Days Flight Time"],1000 - merged_df_2["365 Days Flight Time"])
-    merged_df_2["Min BH left ON"]=np.minimum((102 - merged_df_2["28 Days Flight Time"]+merged_df_2["28th Day.Flight time"]),(1002 - merged_df_2["365 Days Flight Time"]+merged_df_2["365th Day.Flight time"]))
+    merged_df_2["Min BH left ON"]=np.minimum((98 - merged_df_2["28 Days Flight Time"]+merged_df_2["28th Day.Flight time"]),(998 - merged_df_2["365 Days Flight Time"]+merged_df_2["365th Day.Flight time"]))
     merged_df_2["Min DH"]=210-merged_df_2["28 Days Duty Time"]
     merged_df_2["Sectors Left"] = 48 - merged_df_2[["-1D", "-2D", "-3D", "-4D","-5D","-6D"]].sum(axis=1)
     merged_df_2["More than 12"]=2 - (merged_df_2['-1D'] > 12).astype(int) + (merged_df_2['-2D'] > 12).astype(int) + (merged_df_2['-3D'] > 12).astype(int)
