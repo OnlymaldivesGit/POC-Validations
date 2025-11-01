@@ -68,7 +68,7 @@ def output_master_processing(Schedule_output_2):
     output_master=output_master.merge(first_sector,on="Crew code",how="left")
     output_master=output_master.merge(last_sector,on="Crew code",how="left")
     output_master=output_master.merge(output_crew_stats,on="Crew code",how="left")
-    output_master['Duty hours'] = (output_master['End time'] - output_master['Start time']) / pd.Timedelta(hours=1)+(75/60)
+    output_master['Duty hours'] = (output_master['End time'] - output_master['Start time']) / pd.Timedelta(hours=1)+(90/60)
     output_master.drop(['Start time','End time'],axis=1,inplace=True)
     output_master["Working Status"]=1
     return output_master,output_crew_stats

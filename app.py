@@ -246,6 +246,16 @@ if selected == "Constraints Validator":
         crew_ac_stats=crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft)
         comparison_master =  merged_df.merge(output_master, on="Crew code", how="outer")
 
+        validation_report_1=comparison_master.copy()
+        validation_report_1=validation_report_1[validation_report_1["Working Status"]==1]
+        validation_report_1=validation_report_1[[ "Crew code","Crew name","Crew Type_x", "Seniority Level", "Is Instructor?","Prev Day", "Schedule Day", "Next Day",    "Expiry status", "Outstation airport", "Outstation Aircraft", "Max BH left", 
+        "Max BH left ON", "Max DH left", "Max sectors left", "Max more than 12 sectors",  "Starting from", "Ending at", "Total flights", "Total aircrafts",  "Duty hours","Total sectors","Block hours", "No. of swaps" ]]
+        
+        validation_report_1.columns=crew_columns = ["Crew code","Crew Name","Crew Type","Seniority Level","Is Instructor?","Prev Day status","Schedule Day status","Next Day status","Expiry status","Prev day airport","Prev day aircraft","Max BH left",
+        "Max BH left ON","Max DH left","Max sectors left","Max more than 12 sectors","Starting from","Ending at","Total flights","Total aircrafts","Total duty hours","Total sectors","Block hours","No. of swaps"]
+
+
+
         available_working = comparison_master[(comparison_master["Schedule Day"].isin(available_status)) & (~comparison_master["Working Status"].isna())]
         Standby_crew = comparison_master[ (comparison_master["Schedule Day"].isin(available_status)) &(comparison_master["Working Status"].isna())]
         
@@ -511,8 +521,9 @@ if selected == "Constraints Validator":
                 (LTC_check, 'Error in LTC pairings'),
                 (training_issue, 'Error in training pairings'),
                 (comparison_master, 'comparison_master'),
-                (crew_ac_stats, 'crew_ac_stats'),
-                (output_master, 'output_master')
+                (output_master, 'output_master'),
+                (validation_report_1, 'Report 1'),
+                (crew_ac_stats, 'Report 2')
             ]
 
             for df, sheet_name in df_output:
@@ -523,7 +534,7 @@ if selected == "Constraints Validator":
         st.download_button(
             label="📥 Download Validation Report",
             data=output,
-            file_name="constraints_validation.xlsx",
+            file_name=f"TMA validation report - {schedule_date}.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
                 
