@@ -32,6 +32,8 @@ def Schedule_output_processing_2(Schedule_output):
     value_name='Crew code'
     )
 
+    Schedule_output_2=Schedule_output_2[(Schedule_output_2['Crew code'].notnull()) &(Schedule_output_2['Crew code'] != '')]
+
     Schedule_output_2['STD -  Scheduled Departure'] = pd.to_datetime(Schedule_output_2['STD -  Scheduled Departure'], format='%H:%M:%S')
     Schedule_output_2['STA -  Scheduled Arrival'] = pd.to_datetime(Schedule_output_2['STA -  Scheduled Arrival'], format='%H:%M:%S')
 
@@ -41,6 +43,7 @@ def Schedule_output_processing_2(Schedule_output):
     Schedule_output_2['Group id'] = (
         (Schedule_output_2[['Crew code', 'Aircraft No.']] != Schedule_output_2[['Crew code', 'Aircraft No.']].shift()).any(axis=1)
     ).cumsum()
+    
     return Schedule_output_2
 
 

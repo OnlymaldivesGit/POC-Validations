@@ -27,6 +27,13 @@ def Schedule_check_fun(Schedule_output,Schedule_input):
     return Schedule_check[['Flight No.', 'Aircraft No.', 'STD -  Scheduled Departure','STA -  Scheduled Arrival', 'Dep. Airport', 'Arr. Airport']]
 
 
+def unassigned_flights(Schedule_output):
+    missing_crew = Schedule_output[(Schedule_output["Captain"].isnull() | (Schedule_output["Captain"] == "")) |(Schedule_output["First Officer"].isnull() | (Schedule_output["First Officer"] == "")) |
+    (Schedule_output["Flight Attendant"].isnull() | (Schedule_output["Flight Attendant"] == ""))]
+    return missing_crew
+
+
+
 def crew_check_fun(comparison_master,available_working):
     on_training=comparison_master[~(comparison_master["Schedule Day"].isin(leave_status+available_status))]
     on_training_working=on_training[comparison_master["Working Status"]==1]

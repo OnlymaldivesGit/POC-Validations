@@ -46,6 +46,7 @@ from checklist import swaps_check_fun
 from checklist import seniority_check_fun
 from checklist import training_pairing_check
 from checklist import get_short_time_diffs
+from checklist import unassigned_flights
 
 
 
@@ -265,6 +266,8 @@ if selected == "Constraints Validator":
         on_training_working=on_training[~comparison_master["Working Status"].isna()]
         training_non_outstations = on_training[(on_training["Outstation airport"].isin(["", "MLE"]))]
 
+        unassigned_flights_crew=unassigned_flights(Schedule_output)
+
         with st.spinner("⚪️ Validating the Schedule..."):
             placeholder1 = st.empty()
             Schedule_check=Schedule_check_fun(Schedule_output,Schedule_input)
@@ -312,11 +315,22 @@ if selected == "Constraints Validator":
 
         with st.expander("Standby crew"):
             if Standby_crew.empty:
-                st.markdown("All crew has been utilized",unsafe_allow_html=True)
+                st.markdown("All crew have been utilized",unsafe_allow_html=True)
             else:
                 st.dataframe(Standby_crew)
                 st.markdown(
                 "Following crew has been kept for standby for the full day",
+                unsafe_allow_html=True
+                )
+
+
+        with st.expander("Unassigned Flights"):
+            if Standby_crew.empty:
+                st.markdown("All Flights have been assigned",unsafe_allow_html=True)
+            else:
+                st.dataframe(unassigned_flights_crew)
+                st.markdown(
+                "Following flights have one of the missing crew",
                 unsafe_allow_html=True
                 )
 
@@ -477,7 +491,7 @@ if selected == "Constraints Validator":
             else:
                 st.dataframe(pairings_issue_1)
                 st.markdown(
-                "The table above shows the list of crew who has violated senior junior pairings",
+                "The table above shows the list of crew who has violated senior junior pairings. X represents the missing crew",
                 unsafe_allow_html=True
                 )
 
@@ -495,7 +509,7 @@ if selected == "Constraints Validator":
             else:
                 st.dataframe(training_issue)
                 st.markdown(
-                "The table above shows the list of crew who has violated training pairing",
+                "The table above shows the list of potnetial crew who has violated training pairing",
                 unsafe_allow_html=True
                 )
 
