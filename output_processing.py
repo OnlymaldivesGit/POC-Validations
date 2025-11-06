@@ -100,3 +100,40 @@ def crew_ac_stats_processing(Schedule_output_2,aircraft,crew_aircraft):
     return crew_ac_stats
 
 
+
+def overnight_flights(df):
+    key='STD -  Scheduled Departure'
+
+    df[key] = pd.to_datetime(df[key], format='%H:%M:%S')
+    first_sector = df.groupby('Aircraft No.')[key].transform('min')
+    last_sector = df.groupby('Aircraft No.')[key].transform('max')
+
+    # Add a new column
+    def mark_sector(row):
+        if row[key] == first_sector[row.name]:
+            return "Starting"
+        elif row[key] == last_sector[row.name]:
+            return "Ending"
+        else:
+            return ""
+
+
+
+    def calculate_on(row):
+        if row['Sector Position'] == "Starting":
+            return 0 if row['Dep. Airport'] == "MLE" else 1
+        elif row['Sector Position'] == "Ending":
+            return 0 if row['Arr. Airport'] == "MLE" else 1
+        else:
+            return None  # or use np.nan
+
+
+
+    df['Sector Position'] = df.apply(mark_sector, axis=1)
+    df=df[df['Sector Position']!=""]
+    df['ON'] = df.apply(calculate_on, axis=1)
+    return df
+
+
+
+

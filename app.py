@@ -308,6 +308,7 @@ from output_processing import Schedule_output_processing
 from output_processing import Schedule_output_processing_2
 from output_processing import output_master_processing
 from output_processing import crew_ac_stats_processing
+from output_processing import overnight_flights
 from input_validations import input_validation_fun
 
 from checklist import Schedule_check_fun
@@ -442,13 +443,7 @@ if selected == "Crew Stats Generator":
                     </div>
                 """, unsafe_allow_html=True)
             
-            # with col2:
-            #     st.markdown(f"""
-            #         <div class="metric-card">
-            #             <div class="metric-label">Validation Items</div>
-            #             <div class="metric-value">{len(crew_stats_output_2)}</div>
-            #         </div>
-            #     """, unsafe_allow_html=True)
+            
             
             with col2:
                 st.markdown("""
@@ -685,6 +680,8 @@ if selected == "Constraints Validator":
     
     if output_flight_plan is not None:
         Schedule_output = pd.read_excel(output_flight_plan)
+
+
     
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
@@ -756,8 +753,26 @@ if selected == "Constraints Validator":
         pairings_issue_1, LTC_check = seniority_check_fun(Schedule_output, merged_df)
         training_issue = training_pairing_check(flight_training, Schedule_output)
         get_short_time_diffs_df = get_short_time_diffs(crew_ac_stats)
-        
-        
+
+        output_df_kpi = overnight_flights(Schedule_output)
+
+
+
+        aircraft_kpi=Schedule_output['Aircraft No.'].nunique()
+        flight_kpi=Schedule_output['Flight No.'].nunique()
+        sectors_kpi=len(Schedule_output)
+        aircraft_starting_on_kpi=len(output_df_kpi[(output_df_kpi['Sector Position']=="Starting") & (output_df_kpi['ON']==1)])
+        aircraft_ending_on_kpi=len(output_df_kpi[(output_df_kpi['Sector Position']=="Ending") & (output_df_kpi['ON']==1)])
+
+        utilized_captain=Schedule_output['Captain'].nunique()
+        utilized_first_officer=Schedule_output['First Officer'].nunique()
+        utilized_flight_attendant=Schedule_output['Flight Attendant'].nunique()
+
+        Standyby_captain=len(Standby_crew[Standby_crew['Crew Type_x']=="Captain"])
+        Standyby_first_officer=len(Standby_crew[Standby_crew['Crew Type_x']=="First Officer"])
+        Standyby_flight_attendant=len(Standby_crew[Standby_crew['Crew Type_x']=="Flight Attendant"])
+
+
         progress_bar.progress(100)
         status_text.text("✅ Validation complete!")
         time.sleep(0.5)
@@ -1051,7 +1066,267 @@ if selected == "Constraints Validator":
                     df.to_excel(writer, sheet_name=sheet_name, index=False)
         
         output.seek(0)
+
+
+
+        st.markdown('<div class="section-header">📊 Key Performance Indicators</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
+
+        # Create columns with spacing to group sections
+        col1, col2, col3, gap1, col4, col5, col6, col7, gap2, col8, col9, col10, col11 = st.columns([1, 1, 1, 0.3, 1, 1, 1, 1, 0.3, 1, 1, 1, 1])
+
+        # ✈️ Aircraft & Operations (grouped together)
+        with col1:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total Aircraft</div>
+                    <div class="metric-value">{aircraft_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">AC Starting ON</div>
+                    <div class="metric-value">{aircraft_starting_on_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">AC Ending ON</div>
+                    <div class="metric-value">{aircraft_ending_on_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        # Gap 1 - Visual separator
+        with gap1:
+            st.markdown('<div style="border-left: 3px solid rgba(255,255,255,0.3); height: 100px; margin: 0 auto;"></div>', unsafe_allow_html=True)
+
+        # 👥 Crew Utilization (grouped together)
+        total_crew = utilized_captain + utilized_first_officer + utilized_flight_attendant
+
+        with col4:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Total Crew</div>
+                    <div class="metric-value">{total_crew}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col5:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Captains</div>
+                    <div class="metric-value">{utilized_captain}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col6:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">First Officers</div>
+                    <div class="metric-value">{utilized_first_officer}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col7:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Cabin crew</div>
+                    <div class="metric-value">{utilized_flight_attendant}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        # Gap 2 - Visual separator
+        with gap2:
+            st.markdown('<div style="border-left: 3px solid rgba(255,255,255,0.3); height: 100px; margin: 0 auto;"></div>', unsafe_allow_html=True)
+
+        # 🕐 Standby Crew (grouped together)
+        total_standby = Standyby_captain + Standyby_first_officer + Standyby_flight_attendant
+
+        with col8:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <div class="metric-label">Total Standby</div>
+                    <div class="metric-value">{total_standby}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col9:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <div class="metric-label">Standby Cap</div>
+                    <div class="metric-value">{Standyby_captain}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col10:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <div class="metric-label">Standby FO</div>
+                    <div class="metric-value">{Standyby_first_officer}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col11:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <div class="metric-label">Standby FA</div>
+                    <div class="metric-value">{Standyby_flight_attendant}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+
+        df_validation=validation_report_1.copy()
+
+        df_validation=df_validation[['Crew code','Crew Type', 'Seniority Level', 'Max BH left', 'Max BH left ON', 'Max DH left','Max sectors left', 'Max more than 12 sectors', 'Starting from',
+            'Ending at', 'Total flights', 'Total aircrafts', 'Total duty hours','Total sectors', 'Block hours', 'No. of swaps']]
         
+        df_validation_captain=df_validation[df_validation["Crew Type"]=="Captain"]
+        df_validation_FO=df_validation[df_validation["Crew Type"]=="First Officer"]
+        df_validation_FA=df_validation[df_validation["Crew Type"]=="Flight Attendant"]
+
+
+
+        import plotly.express as px
+
+
+
+        def create_top_performers_charts(df_validation, df_validation_captain, df_validation_FO, df_validation_FA):
+        
+            # Configuration
+            TOP_N = 300
+            
+            # Define crew categories
+            crew_categories = {
+                'All Crew': df_validation,
+                'Captains': df_validation_captain,
+                'First Officers': df_validation_FO,
+                'Flight Attendants': df_validation_FA
+            }
+            
+            # Define metrics to analyze
+            metrics = {
+                'Block hours': {
+                    'column': 'Block hours',
+                    'title_suffix': 'Block Hours',
+                    'y_label': 'Block Hours'
+                },
+                'Sectors': {
+                    'column': 'Total sectors',
+                    'title_suffix': 'Total sectors',
+                    'y_label': 'Number of Total sectors'
+                }
+            }
+            
+            # Create charts for each metric
+            for metric_name, metric_config in metrics.items():
+                st.subheader(f"Top Crew by {metric_config['title_suffix']}")
+                
+                # Create columns for side-by-side display
+                cols = st.columns(4)
+                
+                # Generate chart for each crew category
+                for idx, (category_name, df) in enumerate(crew_categories.items()):
+                    # Get top N performers
+                    top_performers = df.nlargest(TOP_N, metric_config['column'])
+                    
+                    # Create interactive bar chart
+                    fig = px.bar(
+                        top_performers,
+                        x='Crew code',
+                        y=metric_config['column'],
+                        title=f" {category_name}",
+                        labels={
+                            'Crew code': 'Crew Code',
+                            metric_config['column']: metric_config['y_label']
+                        },
+                        hover_data=[metric_config['column']],
+                        color_discrete_sequence=['#1f77b4']  # Consistent color scheme
+                    )
+                    
+                    # Update layout for better readability
+                    fig.update_layout(
+                        xaxis_tickangle=-45,
+                        height=400,
+                        margin=dict(l=20, r=20, t=40, b=20)
+                    )
+                    
+                    # Display chart in appropriate column
+                    with cols[idx]:
+                        st.plotly_chart(fig, use_container_width=True)
+                
+                # Add spacing between metrics
+                st.markdown("---")
+
+        
+
+
+        # Usage in your Streamlit app
+        create_top_performers_charts(
+            df_validation,
+            df_validation_captain,
+            df_validation_FO,
+            df_validation_FA
+        )
+
+
+        col1,col2,col3,col4=st.columns(4)
+
+        with col1:
+            fig_pie1 = px.pie(
+                df_validation,
+                names='No. of swaps',  # Replace 'X' with your actual column name
+                title='Crew swaps',
+                hole=0.3  # Optional: creates a donut chart (remove if you want a full pie)
+            )
+
+            st.plotly_chart(fig_pie1, use_container_width=True)
+
+
+        with col2:
+            fig_pie2 = px.pie(
+                df_validation_captain,
+                names='No. of swaps',  # Replace 'X' with your actual column name
+                title='Captains swaps',
+                hole=0.3  # Optional: creates a donut chart (remove if you want a full pie)
+            )
+
+            st.plotly_chart(fig_pie2, use_container_width=True)
+
+        with col3:
+            fig_pie3 = px.pie(
+                df_validation_FO,
+                names='No. of swaps',  # Replace 'X' with your actual column name
+                title='First officer swaps',
+                hole=0.3  # Optional: creates a donut chart (remove if you want a full pie)
+            )
+
+            st.plotly_chart(fig_pie3, use_container_width=True)
+
+        with col4:
+            fig_pie4 = px.pie(
+                df_validation_FA,
+                names='No. of swaps',  # Replace 'X' with your actual column name
+                title='Flight Attendant swaps',
+                hole=0.3  # Optional: creates a donut chart (remove if you want a full pie)
+            )
+
+            st.plotly_chart(fig_pie4, use_container_width=True)
+
+
+
+
+
+
+    
+
+                
         col1, col2, col3 = st.columns([1, 1, 1])
         with col2:
             st.download_button(
@@ -1061,3 +1336,5 @@ if selected == "Constraints Validator":
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 use_container_width=True
             )
+
+        
