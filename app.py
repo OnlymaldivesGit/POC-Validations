@@ -321,7 +321,21 @@ from checklist import training_pairing_check
 from checklist import get_short_time_diffs
 from checklist import unassigned_flights
 
-# Sidebar
+
+from clustering import cluster_fun
+
+
+
+
+st.markdown("""
+    <style>
+    button[title="Toggle sidebar"] {
+        display:none;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 with st.sidebar:
     st.markdown("""
         <div style="text-align: center; padding: 20px 0; margin-bottom: 20px;">
@@ -1323,8 +1337,11 @@ if selected == "Constraints Validator":
 
 
 
+        crew_groups=validation_report_1.merge(crew_aircraft,on="Crew code")
+        crew_groups.to_excel("Sample clustering.xlsx")
+        df_grouped=cluster_fun(crew_groups)
+        st.dataframe(df_grouped)
 
-    
 
                 
         col1, col2, col3 = st.columns([1, 1, 1])
