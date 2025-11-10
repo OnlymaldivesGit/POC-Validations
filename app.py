@@ -1336,6 +1336,10 @@ if selected == "Constraints Validator":
 
 
 
+        st.markdown('<div class="section-header">📊 Common Profile Crews</div>', unsafe_allow_html=True)
+
+        st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
+
 
         crew_groups=validation_report_1.merge(crew_aircraft,on="Crew code")
         crew_groups.to_excel("Sample clustering.xlsx")
