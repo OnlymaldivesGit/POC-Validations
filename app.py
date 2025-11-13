@@ -472,14 +472,14 @@ if selected == "Crew Stats Generator":
             # Results
             st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
             st.markdown("### 📋 Crew stats reports")
-            st.dataframe(crew_stats_output_2, use_container_width=True, height=400)
+            st.dataframe(crew_stats_output, use_container_width=True, height=400)
             st.markdown('</div>', unsafe_allow_html=True)
             
             # Download
             output = io_module.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 crew_stats_output.to_excel(writer, sheet_name='crew stats', index=False)
-                crew_stats_output_2.to_excel(writer, sheet_name='crew stats validator', index=False)
+                # crew_stats_output_2.to_excel(writer, sheet_name='crew stats validator', index=False)
             
             output.seek(0)
             
@@ -551,15 +551,15 @@ if selected == "Input Data Validator" or selected == "Constraints Validator":
         with col1:
             aircraft_input = st.file_uploader("Aircraft Data", type=["xlsx", "xls"], key="aircraft")
             crew_aircraft_input = st.file_uploader("Crew Aircraft Matrix", type=["xlsx", "xls"], key="crew_ac")
-            seniority_input = st.file_uploader("Seniority Pairing", type=["xlsx", "xls"], key="seniority")
+            seniority_input = st.file_uploader("Crew Pairing", type=["xlsx", "xls"], key="seniority")
         
         with col2:
             logsheet_input = st.file_uploader("Logsheet", type=["xlsx", "xls"], key="logsheet")
-            crew_master_input = st.file_uploader("Crew Master", type=["xlsx", "xls"], key="crew_master")
-            expiry_data_input = st.file_uploader("Crew Expiry", type=["xlsx", "xls"], key="expiry")
+            crew_master_input = st.file_uploader("Crew Resource", type=["xlsx", "xls"], key="crew_master")
+            expiry_data_input = st.file_uploader("Crew License Expiry", type=["xlsx", "xls"], key="expiry")
         
         with col3:
-            flight_training_input = st.file_uploader("Flight Training", type=["xlsx", "xls"], key="training")
+            flight_training_input = st.file_uploader("Training Pairings", type=["xlsx", "xls"], key="training")
             month_plan_input = st.file_uploader("Monthly Plan", type=["xlsx", "xls"], key="month_plan")
             crew_stats_input = st.file_uploader("Crew Stats", type=["xlsx", "xls"], key="crew_stats")
         

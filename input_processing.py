@@ -39,14 +39,14 @@ def crew_stats_xml(sectors,flt,day_27th,day_364th):
     dfs = [flt,sectors, day_27th, day_364th]
     merged_df = reduce(lambda left, right: pd.merge(left, right, on='Crew', how='left'), dfs)
     merged_df=merged_df[['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '27th Day FT','364th Day FT', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D' ]]
-    merged_df.columns=['Crew','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', ]
+    merged_df.columns=['Crew code','28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time', '-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', ]
 
     merged_df_2=merged_df.copy()
 
     cols= ['28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time']
     merged_df_2[cols] = merged_df_2[cols].applymap(fun)
 
-    merged_df_2=merged_df_2[["Crew",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
+    merged_df_2=merged_df_2[["Crew code",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
 
     merged_df_2["Min BH left"]=np.minimum(100 - merged_df_2["28 Days Flight Time"],1000 - merged_df_2["365 Days Flight Time"])
     merged_df_2["Min BH left ON"]=np.minimum((98 - merged_df_2["28 Days Flight Time"]+merged_df_2["28th Day.Flight time"]),(998 - merged_df_2["365 Days Flight Time"]+merged_df_2["365th Day.Flight time"]))
