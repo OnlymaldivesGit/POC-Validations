@@ -58,6 +58,22 @@ def crew_stats_xml(sectors,flt,day_27th,day_364th):
     return merged_df,merged_df_2
 
 
+def new_crew_stats(crew_stats):
+    cols= ['28 Days Flight Time', '365 Days Flight Time', '28 Days Duty Time', '28th Day.Flight time','365th Day.Flight time']
+    crew_stats[cols] = crew_stats[cols].applymap(fun)
+
+    crew_stats=crew_stats[["Crew code",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D','28 Days Flight Time','28th Day.Flight time', '365 Days Flight Time','365th Day.Flight time','28 Days Duty Time']]
+
+    crew_stats["Min BH left"]=np.minimum(100 - crew_stats["28 Days Flight Time"],1000 - crew_stats["365 Days Flight Time"])
+    crew_stats["Min BH left ON"]=np.minimum((98 - crew_stats["28 Days Flight Time"]+crew_stats["28th Day.Flight time"]),(998 - crew_stats["365 Days Flight Time"]+crew_stats["365th Day.Flight time"]))
+    crew_stats["Min DH"]=210-crew_stats["28 Days Duty Time"]
+    crew_stats["Sectors Left"] = 48 - crew_stats[["-1D", "-2D", "-3D", "-4D","-5D","-6D"]].sum(axis=1)
+    crew_stats["More than 12"]=2 - (crew_stats['-1D'] > 12).astype(int) + (crew_stats['-2D'] > 12).astype(int) + (crew_stats['-3D'] > 12).astype(int)
+    crew_stats.columns= ["Crew code",'-1D', '-2D', '-3D', '-4D', '-5D', '-6D', '-7D', '28 Days BH','27th Day BH', '365 Days BH', '364th Day BH','28 Days DT', 'Min BH left', 'Min BH left ON', 'Min DH','Sectors Left', 'More than 12']
+    return crew_stats
+
+
+
 
 
 
@@ -71,6 +87,7 @@ def schedule_input_processing(Schedule_input):
     Schedule_input['Dep. Airport'] = Schedule_input['Dep. Airport'].str.strip()
     Schedule_input['Arr. Airport'] = Schedule_input['Arr. Airport'].str.strip()
     Schedule_input=Schedule_input[Schedule_input['Dep. Airport']!=Schedule_input['Arr. Airport']]
+    Schedule_input=Schedule_input[Schedule_input["Flight No."].notna()]
     return Schedule_input
 
 def aircraft_processing(aircraft):

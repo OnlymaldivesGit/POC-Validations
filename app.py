@@ -291,6 +291,8 @@ st.markdown("""
 available_status = ["1", "Li", "LC"]
 leave_status = ["X", "AL", "AU", "PAL", "EM", "ML", "M"]
 
+
+# Functions import
 from input_processing import schedule_input_processing
 from input_processing import aircraft_processing
 from input_processing import crew_aircraft_processing
@@ -303,6 +305,7 @@ from input_processing import seniority_processing
 from input_processing import crew_master_processing
 from input_processing import merged_data_fun
 from input_processing import crew_stats_xml
+from input_processing import new_crew_stats
 
 from output_processing import Schedule_output_processing
 from output_processing import Schedule_output_processing_2
@@ -325,17 +328,7 @@ from checklist import unassigned_flights
 from clustering import cluster_fun
 
 
-
-
-st.markdown("""
-    <style>
-    button[title="Toggle sidebar"] {
-        display:none;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-
+# Sidebar Design and Layout
 with st.sidebar:
     st.markdown("""
         <div style="text-align: center; padding: 20px 0; margin-bottom: 20px;">
@@ -478,9 +471,7 @@ if selected == "Crew Stats Generator":
             # Download
             output = io_module.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                crew_stats_output.to_excel(writer, sheet_name='crew stats', index=False)
-                # crew_stats_output_2.to_excel(writer, sheet_name='crew stats validator', index=False)
-            
+                crew_stats_output.to_excel(writer, sheet_name='crew stats', index=False)            
             output.seek(0)
             
             col1, col2, col3 = st.columns([1, 1, 1])
@@ -529,7 +520,7 @@ if selected == "Input Data Validator" or selected == "Constraints Validator":
     
     start_date = date(2025, 9, 1).strftime("%Y-%m-%d")
     end_date = date(2025, 9, 8).strftime("%Y-%m-%d")
-    
+
     # File uploads
     if start_date <= schedule_date <= end_date:
         st.markdown('<div class="info-box">📂 Using pre-loaded validation data</div>', unsafe_allow_html=True)
@@ -583,7 +574,8 @@ if selected == "Input Data Validator" or selected == "Constraints Validator":
         if month_plan_input is not None:
             month_plan = pd.read_excel(month_plan_input)
         if crew_stats_input is not None:
-            crew_stats = pd.read_excel(crew_stats_input, sheet_name=schedule_date)
+            crew_stats = pd.read_excel(crew_stats_input)
+            crew_stats=new_crew_stats(crew_stats)
 
 if selected == "Input Data Validator":
     col1, col2, col3 = st.columns([1, 1, 1])
@@ -600,8 +592,8 @@ if selected == "Input Data Validator":
             expiry_data = expiry_data_processing(expiry_data)
             flight_training = flight_training_processing(flight_training, schedule_date)
             month_plan = month_plan_processing(month_plan, schedule_date, prev_day, next_day)
+
             crew_stats = crew_stats_processing(crew_stats)
-            
             merged_df = merged_data_fun(month_plan, crew_master, seniority, expiry_data, logsheet, crew_stats)
             input_issue_1, input_issue_2 = input_validation_fun(merged_df)
         

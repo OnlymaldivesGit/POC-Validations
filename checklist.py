@@ -24,7 +24,7 @@ def Schedule_check_fun(Schedule_output,Schedule_input):
         'both': 'both'
     })
     Schedule_check=Schedule_check[Schedule_check["_merge"]!="both"]
-    return Schedule_check[['Flight No.', 'Aircraft No.', 'STD -  Scheduled Departure','STA -  Scheduled Arrival', 'Dep. Airport', 'Arr. Airport']]
+    return Schedule_check[['Flight No.', 'Aircraft No.', 'STD -  Scheduled Departure','STA -  Scheduled Arrival', 'Dep. Airport', 'Arr. Airport',"_merge"]]
 
 
 def unassigned_flights(Schedule_output):

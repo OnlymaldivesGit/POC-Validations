@@ -14,8 +14,8 @@ leave_status=["X","AL","AU","PAL","EM","ML","M"]
 def Schedule_output_processing(Schedule_output):
     Schedule_output["Flight No."] = Schedule_output["Flight No."].str.strip()
     Schedule_output['Aircraft No.'] = Schedule_output['Aircraft No.'].str.strip()
-    Schedule_output['STD -  Scheduled Departure'] = Schedule_output['STD -  Scheduled Departure'].str.strip()
-    Schedule_output['STA -  Scheduled Arrival'] = Schedule_output['STA -  Scheduled Arrival'].str.strip()
+    Schedule_output['STD -  Scheduled Departure'] = Schedule_output['STD -  Scheduled Departure'].astype(str).str.strip()
+    Schedule_output['STA -  Scheduled Arrival'] = Schedule_output['STA -  Scheduled Arrival'].astype(str).str.strip()
     Schedule_output['Dep. Airport'] = Schedule_output['Dep. Airport'].str.strip()
     Schedule_output['Arr. Airport'] = Schedule_output['Arr. Airport'].str.strip()
     Schedule_output['Captain'] = Schedule_output['Captain'].str.replace(r'\s*\(.*?\)', '', regex=True).str.strip()
