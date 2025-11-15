@@ -165,33 +165,33 @@ def cluster_fun(data):
         
         data["Max more than 12 sectors"]=data["Max more than 12 sectors"].apply(lambda x: "Not possible" if x==0 else "Possible")
         
-        print("APPROACH 1: EXACT GROUPING (Identical Parameter Values)")
+        # print("APPROACH 1: EXACT GROUPING (Identical Parameter Values)")
         
         
         grouping_model = CrewGrouping(df)
         df_grouped, groups_summary = grouping_model.create_groups()
         
-        print("Grouping Statistics:")
+        # print("Grouping Statistics:")
         stats = grouping_model.get_statistics()
-        for key, value in stats.items():
-            print(f"  {key}: {value}")
-        print()
+        # for key, value in stats.items():
+        #     print(f"  {key}: {value}")
+        # print()
         
-        print("Top 10 Largest Groups:")
+        # print("Top 10 Largest Groups:")
         group_sizes = df_grouped.groupby('Group_ID').size().sort_values(ascending=False)
-        print(group_sizes.head(10))
-        print()
+        # print(group_sizes.head(10))
+        # print()
         
-        print("Sample Group Details (Top 3 Groups):")
-        for group_id in group_sizes.head(3).index:
-            print(f"\n{group_id}:")
-            print(f"  Size: {group_sizes[group_id]} crew members")
-            print(f"  Members: {grouping_model.get_group_members(group_id)['Crew code'].tolist()}")
-            print(f"  Parameters:")
-            group_params = groups_summary.loc[group_id]
-            for col in grouping_model.grouping_columns:
-                print(f"    {col}: {group_params[col]}")
-        print()
+        # print("Sample Group Details (Top 3 Groups):")
+        # for group_id in group_sizes.head(3).index:
+        #     print(f"\n{group_id}:")
+        #     print(f"  Size: {group_sizes[group_id]} crew members")
+        #     print(f"  Members: {grouping_model.get_group_members(group_id)['Crew code'].tolist()}")
+        #     print(f"  Parameters:")
+        #     group_params = groups_summary.loc[group_id]
+        #     for col in grouping_model.grouping_columns:
+        #         print(f"    {col}: {group_params[col]}")
+        # print()
 
         return df_grouped
         

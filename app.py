@@ -1,3 +1,4 @@
+
 import pandas as pd
 from datetime import datetime, timedelta
 import numpy as np
@@ -108,7 +109,7 @@ st.markdown("""
     }
     
     .metric-label {
-        font-size: 0.9rem;
+        font-size: 0.75rem;
         opacity: 0.9;
         text-transform: uppercase;
         letter-spacing: 1px;
@@ -384,6 +385,16 @@ with st.sidebar:
                 <p><strong>Version:</strong> 2.0</p>
                 <p><strong>Last Updated:</strong> Nov 2025</p>
                 <p>Comprehensive crew scheduling validation and reporting system.</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+    
+    with st.expander("👨‍💻 Developer", expanded=False):
+        st.markdown("""
+            <div style="color: #ffffff; font-size: 0.9rem; line-height: 1.6;">
+                <p><strong>Name:</strong> Himanshu Gupta</p>
+                <p><strong>Department:</strong> Corporate strategy</p>
+                <p><strong>Contact:</strong> +960 7375336</p>
             </div>
         """, unsafe_allow_html=True)
 
@@ -767,6 +778,8 @@ if selected == "Constraints Validator":
         aircraft_kpi=Schedule_output['Aircraft No.'].nunique()
         flight_kpi=Schedule_output['Flight No.'].nunique()
         sectors_kpi=len(Schedule_output)
+
+
         aircraft_starting_on_kpi=len(output_df_kpi[(output_df_kpi['Sector Position']=="Starting") & (output_df_kpi['ON']==1)])
         aircraft_ending_on_kpi=len(output_df_kpi[(output_df_kpi['Sector Position']=="Ending") & (output_df_kpi['ON']==1)])
 
@@ -777,6 +790,18 @@ if selected == "Constraints Validator":
         Standyby_captain=len(Standby_crew[Standby_crew['Crew Type_x']=="Captain"])
         Standyby_first_officer=len(Standby_crew[Standby_crew['Crew Type_x']=="First Officer"])
         Standyby_flight_attendant=len(Standby_crew[Standby_crew['Crew Type_x']=="Flight Attendant"])
+
+
+        aircraft_input_kpi=Schedule_input['Aircraft No.'].nunique()
+        flight_input_kpi=Schedule_input['Flight No.'].nunique()
+        sectors_input_kpi=len(Schedule_input)
+        
+        test=merged_df[merged_df["Schedule Day"].isin(available_status)]
+
+        available_captain=len(test[test["Crew Type"]=="Captain"])
+        available_first_officer=len(test[test["Crew Type"]=='First Officer'])
+        available_flight_attendant=len(test[test["Crew Type"]=='Flight Attendant'])
+
 
 
         progress_bar.progress(100)
@@ -1080,18 +1105,96 @@ if selected == "Constraints Validator":
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
 
         # Create columns with spacing to group sections
-        col1, col2, col3, gap1, col4, col5, col6, col7, gap2, col8, col9, col10, col11 = st.columns([1, 1, 1, 0.3, 1, 1, 1, 1, 0.3, 1, 1, 1, 1])
+        st.subheader(f"Available Aircarft and Crew")
+
+        col1, col2, col3, gap1, col4, col5, col6, col7 = st.columns([1, 1, 1, 0.3, 1, 1, 1, 1])
+        
 
         # ✈️ Aircraft & Operations (grouped together)
         with col1:
             st.markdown(f'''
                 <div class="metric-card">
                     <div class="metric-label">Total Aircraft</div>
-                    <div class="metric-value">{aircraft_kpi}</div>
+                    <div class="metric-value">{aircraft_input_kpi}</div>
                 </div>
             ''', unsafe_allow_html=True)
 
         with col2:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total Flight</div>
+                    <div class="metric-value">{flight_input_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total sectors</div>
+                    <div class="metric-value">{sectors_input_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        # Gap 1 - Visual separator
+        with gap1:
+            st.markdown('<div style="border-left: 3px solid rgba(255,255,255,0.3); height: 100px; margin: 0 auto;"></div>', unsafe_allow_html=True)
+
+        # 👥 Crew Utilization (grouped together)
+        total_crew = available_captain + available_first_officer + available_flight_attendant
+
+        with col4:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Total Available Crew</div>
+                    <div class="metric-value">{total_crew}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col5:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Available Captains</div>
+                    <div class="metric-value">{available_captain}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col6:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Available First Officers</div>
+                    <div class="metric-value">{available_first_officer}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col7:
+            st.markdown(f'''
+                <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <div class="metric-label">Available Cabin crew</div>
+                    <div class="metric-value">{available_flight_attendant}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        
+        st.markdown('</div>', unsafe_allow_html=True)
+
+
+
+        st.subheader(f"")
+        st.subheader(f"Scheduled Aircraft and Crew")
+        # Create columns with spacing to group sections
+        col1, col2, col3,col12,col13, gap1, col4, col5, col6, col7, gap2, col8, col9, col10, col11 = st.columns([1, 1, 1,1,1, 0.3, 1, 1, 1, 1, 0.3, 1, 1, 1, 1])
+        
+
+        # ✈️ Aircraft & Operations (grouped together)
+        with col1:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total AC</div>
+                    <div class="metric-value">{aircraft_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col12:
             st.markdown(f'''
                 <div class="metric-card">
                     <div class="metric-label">AC Starting ON</div>
@@ -1099,11 +1202,27 @@ if selected == "Constraints Validator":
                 </div>
             ''', unsafe_allow_html=True)
 
-        with col3:
+        with col13:
             st.markdown(f'''
                 <div class="metric-card">
                     <div class="metric-label">AC Ending ON</div>
                     <div class="metric-value">{aircraft_ending_on_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col2:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total Flights</div>
+                    <div class="metric-value">{flight_kpi}</div>
+                </div>
+            ''', unsafe_allow_html=True)
+
+        with col3:
+            st.markdown(f'''
+                <div class="metric-card">
+                    <div class="metric-label">Total Sectors</div>
+                    <div class="metric-value">{sectors_kpi}</div>
                 </div>
             ''', unsafe_allow_html=True)
 
@@ -1117,7 +1236,7 @@ if selected == "Constraints Validator":
         with col4:
             st.markdown(f'''
                 <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="metric-label">Total Crew</div>
+                    <div class="metric-label">Utilized Crew</div>
                     <div class="metric-value">{total_crew}</div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -1125,7 +1244,7 @@ if selected == "Constraints Validator":
         with col5:
             st.markdown(f'''
                 <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="metric-label">Captains</div>
+                    <div class="metric-label">Utilized Cap</div>
                     <div class="metric-value">{utilized_captain}</div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -1133,7 +1252,7 @@ if selected == "Constraints Validator":
         with col6:
             st.markdown(f'''
                 <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="metric-label">First Officers</div>
+                    <div class="metric-label">Utilized FO</div>
                     <div class="metric-value">{utilized_first_officer}</div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -1141,7 +1260,7 @@ if selected == "Constraints Validator":
         with col7:
             st.markdown(f'''
                 <div class="metric-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-                    <div class="metric-label">Cabin crew</div>
+                    <div class="metric-label">Utilized FA </div>
                     <div class="metric-value">{utilized_flight_attendant}</div>
                 </div>
             ''', unsafe_allow_html=True)
@@ -1186,6 +1305,13 @@ if selected == "Constraints Validator":
             ''', unsafe_allow_html=True)
 
         st.markdown('</div>', unsafe_allow_html=True)
+
+        st.subheader(f"")
+
+        st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
+
+
+        
 
 
         df_validation=validation_report_1.copy()
