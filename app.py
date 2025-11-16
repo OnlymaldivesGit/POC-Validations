@@ -1133,7 +1133,7 @@ if selected == "Constraints Validator":
             ]
         })
 
-        st.dataframe(metrics_df)
+        
 
 
         # Download report
