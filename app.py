@@ -1066,6 +1066,16 @@ if selected == "Constraints Validator":
         ]
 
 
+        df_validation=validation_report_1.copy()
+
+        df_validation=df_validation[['Crew code','Crew Type', 'Seniority Level', 'Max BH left', 'Max BH left ON', 'Max DH left','Max sectors left', 'Max more than 12 sectors', 'Starting from',
+            'Ending at', 'Total flights', 'Total aircrafts', 'Total duty hours','Total sectors', 'Block hours', 'No. of swaps']]
+        
+        df_validation_captain=df_validation[df_validation["Crew Type"]=="Captain"]
+        df_validation_FO=df_validation[df_validation["Crew Type"]=="First Officer"]
+        df_validation_FA=df_validation[df_validation["Crew Type"]=="Flight Attendant"]
+
+
     
         # Create the dataframe
         metrics_df = pd.DataFrame({
@@ -1089,7 +1099,11 @@ if selected == "Constraints Validator":
                 'Total Standby crew',
                 'Standby Captain',
                 'Standby First Officer',
-                'Standby Flight Attendant'
+                'Standby Flight Attendant',
+                "Total Swap percentage",
+                "Captain Swap percentage",
+                "First Officer Swap percentage",
+                "Flight Attendant Swap percentage"
             ],
             'Value': [
                 aircraft_input_kpi,
@@ -1111,7 +1125,11 @@ if selected == "Constraints Validator":
                 Standyby_captain + Standyby_first_officer + Standyby_flight_attendant,
                 Standyby_captain,
                 Standyby_first_officer,
-                Standyby_flight_attendant
+                Standyby_flight_attendant,
+                (df_validation['No. of swaps'] == 1).sum() / len(df_validation) * 100,
+                (df_validation_captain['No. of swaps'] == 1).sum() / len(df_validation_captain) * 100,
+                (df_validation_FO['No. of swaps'] == 1).sum() / len(df_validation_FO) * 100,
+                (df_validation_FA['No. of swaps'] == 1).sum() / len(df_validation_FA) * 100
             ]
         })
 
@@ -1368,14 +1386,7 @@ if selected == "Constraints Validator":
         
 
 
-        df_validation=validation_report_1.copy()
-
-        df_validation=df_validation[['Crew code','Crew Type', 'Seniority Level', 'Max BH left', 'Max BH left ON', 'Max DH left','Max sectors left', 'Max more than 12 sectors', 'Starting from',
-            'Ending at', 'Total flights', 'Total aircrafts', 'Total duty hours','Total sectors', 'Block hours', 'No. of swaps']]
         
-        df_validation_captain=df_validation[df_validation["Crew Type"]=="Captain"]
-        df_validation_FO=df_validation[df_validation["Crew Type"]=="First Officer"]
-        df_validation_FA=df_validation[df_validation["Crew Type"]=="Flight Attendant"]
 
 
 
