@@ -1064,7 +1064,60 @@ if selected == "Constraints Validator":
             "Starting from", "Ending at", "Total flights", "Total aircrafts",
             "Total duty hours", "Total sectors", "Block hours", "No. of swaps"
         ]
-        
+
+
+    
+        # Create the dataframe
+        metrics_df = pd.DataFrame({
+            "Parameter": [
+                'Total Aircraft in Schedule',
+                'Total Flight in Schedule',
+                'Total sectors in Schedule',
+                'Total Available Crew in Month Plan',
+                'Available Captains in Month Plan',
+                'Available First Officers in Month Plan',
+                'Available Cabin crew in Month Plan',
+                'Total Aircraft Scheduled',
+                'Aircraft Scheduled Starting ON',
+                'Aircraft Scheduled Ending ON',
+                'Total Flights Scheduled',
+                'Total Sectors Scheduled',
+                'Utilized Crew',
+                'Utilized Captain',
+                'Utilized First Officer',
+                'Utilized Flight Attendant',
+                'Total Standby crew',
+                'Standby Captain',
+                'Standby First Officer',
+                'Standby Flight Attendant'
+            ],
+            'Value': [
+                aircraft_input_kpi,
+                flight_input_kpi,
+                sectors_input_kpi,
+                available_captain + available_first_officer + available_flight_attendant,
+                available_captain,
+                available_first_officer,
+                available_flight_attendant,
+                aircraft_kpi,
+                aircraft_starting_on_kpi,
+                aircraft_ending_on_kpi,
+                flight_kpi,
+                sectors_kpi,
+                utilized_captain + utilized_first_officer + utilized_flight_attendant,
+                utilized_captain,
+                utilized_first_officer,
+                utilized_flight_attendant,
+                Standyby_captain + Standyby_first_officer + Standyby_flight_attendant,
+                Standyby_captain,
+                Standyby_first_officer,
+                Standyby_flight_attendant
+            ]
+        })
+
+        st.dataframe(metrics_df)
+
+
         # Download report
         st.markdown("<br>", unsafe_allow_html=True)
         output = io_module.BytesIO()
@@ -1089,7 +1142,8 @@ if selected == "Constraints Validator":
                 (comparison_master, 'comparison_master'),
                 (output_master, 'output_master'),
                 (validation_report_1, 'Report 1'),
-                (crew_ac_stats, 'Report 2')
+                (crew_ac_stats, 'Report 2'),
+                (metrics_df,"Utilization metrics")
             ]
             
             for df, sheet_name in df_output:
