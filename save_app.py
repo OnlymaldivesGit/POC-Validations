@@ -547,6 +547,47 @@ if selected == "Input Data Validator" or selected == "Constraints Validator":
     else:
         st.markdown('<div class="dashboard-card">', unsafe_allow_html=True)
         st.markdown("### 📤 Upload Required Files")
+        
+        # col1, col2, col3 = st.columns(3)
+        
+        # with col1:
+        #     aircraft_input = st.file_uploader("Aircraft Data", type=["xlsx", "xls"], key="aircraft")
+        #     crew_aircraft_input = st.file_uploader("Crew Aircraft Matrix", type=["xlsx", "xls"], key="crew_ac")
+        #     seniority_input = st.file_uploader("Crew Pairing", type=["xlsx", "xls"], key="seniority")
+        
+        # with col2:
+        #     logsheet_input = st.file_uploader("Logsheet", type=["xlsx", "xls"], key="logsheet")
+        #     crew_master_input = st.file_uploader("Crew Resource", type=["xlsx", "xls"], key="crew_master")
+        #     expiry_data_input = st.file_uploader("Crew License Expiry", type=["xlsx", "xls"], key="expiry")
+        
+        # with col3:
+        #     flight_training_input = st.file_uploader("Training Pairings", type=["xlsx", "xls"], key="training")
+        #     month_plan_input = st.file_uploader("Monthly Plan", type=["xlsx", "xls"], key="month_plan")
+        #     crew_stats_input = st.file_uploader("Crew Stats", type=["xlsx", "xls"], key="crew_stats")
+        
+        # st.markdown('</div>', unsafe_allow_html=True)
+        
+        # # Load uploaded files
+        # if aircraft_input is not None:
+        #     aircraft = pd.read_excel(aircraft_input)
+        # if crew_aircraft_input is not None:
+        #     crew_aircraft = pd.read_excel(crew_aircraft_input)
+        # if seniority_input is not None:
+        #     seniority = pd.read_excel(seniority_input)
+        # if logsheet_input is not None:
+        #     logsheet = pd.read_excel(logsheet_input)
+        # if crew_master_input is not None:
+        #     crew_master = pd.read_excel(crew_master_input)
+        # if expiry_data_input is not None:
+        #     expiry_data = pd.read_excel(expiry_data_input)
+        # if flight_training_input is not None:
+        #     flight_training = pd.read_excel(flight_training_input)
+        # if month_plan_input is not None:
+        #     month_plan = pd.read_excel(month_plan_input)
+        # if crew_stats_input is not None:
+        #     crew_stats = pd.read_excel(crew_stats_input)
+        #     crew_stats=new_crew_stats(crew_stats)
+
 
         
         FILE_IDENTIFIERS = {
@@ -1470,9 +1511,8 @@ if selected == "Constraints Validator":
 
         import plotly.express as px
 
-
         def create_top_performers_charts(df_validation, df_validation_captain, df_validation_FO, df_validation_FA):
-    
+        
             # Configuration
             TOP_N = 300
             
@@ -1507,72 +1547,38 @@ if selected == "Constraints Validator":
                 
                 # Generate chart for each crew category
                 for idx, (category_name, df) in enumerate(crew_categories.items()):
-                    # Clean and ensure proper sorting
-                    df_clean = df.copy()
-                    
-                    # Ensure numeric type
-                    df_clean[metric_config['column']] = pd.to_numeric(
-                        df_clean[metric_config['column']], 
-                        errors='coerce'
-                    )
-                    
-                    # Remove any NaN values
-                    df_clean = df_clean.dropna(subset=[metric_config['column']])
-                    
-                    # Sort by metric descending
-                    df_clean = df_clean.sort_values(
-                        metric_config['column'],
-                        ascending=False
-                    ).reset_index(drop=True)
-                    
                     # Get top N performers
-                    top_performers = df_clean.head(TOP_N).copy()
-                    
-                    # ADD RANK TO MAKE EACH BAR UNIQUE
-                    top_performers['Rank'] = range(1, len(top_performers) + 1)
-                    top_performers['Display_Label'] = top_performers['Rank'].astype(str) + '. ' + top_performers['Crew code']
+                    top_performers = df.nlargest(TOP_N, metric_config['column'])
                     
                     # Create interactive bar chart
                     fig = px.bar(
                         top_performers,
-                        x='Display_Label',  # Use ranked label instead of crew code
+                        x='Crew code',
                         y=metric_config['column'],
-                        title=f"{category_name}",
+                        title=f" {category_name}",
                         labels={
-                            'Display_Label': 'Crew Code (Ranked)',
+                            'Crew code': 'Crew Code',
                             metric_config['column']: metric_config['y_label']
                         },
-                        hover_data={
-                            'Display_Label': False,  # Don't show in hover
-                            'Crew code': True,  # Show original crew code
-                            metric_config['column']: True,
-                            'Rank': True
-                        },
-                        color_discrete_sequence=['#1f77b4']
+                        hover_data=[metric_config['column']],
+                        color_discrete_sequence=['#1f77b4']  # Consistent color scheme
                     )
                     
                     # Update layout for better readability
                     fig.update_layout(
                         xaxis_tickangle=-45,
                         height=400,
-                        margin=dict(l=20, r=20, t=40, b=20),
-                        showlegend=False
+                        margin=dict(l=20, r=20, t=40, b=20)
                     )
-                    
-                    # Update x-axis to show only every Nth label for readability
-                    if len(top_performers) > 50:
-                        fig.update_xaxes(
-                            tickmode='linear',
-                            tick0=0,
-                            dtick=10  # Show every 10th label
-                        )
                     
                     # Display chart in appropriate column
                     with cols[idx]:
                         st.plotly_chart(fig, use_container_width=True)
                 
                 # Add spacing between metrics
-                st.markdown("---")        
+                st.markdown("---")
+
+        
 
 
         # Usage in your Streamlit app
@@ -1714,5 +1720,75 @@ if selected == "Constraints Validator":
                 mime="text/html",
                 use_container_width=True
             )
+
+
+
+# def create_top_performers_charts(df_validation, df_validation_captain, df_validation_FO, df_validation_FA):
+        
+        #     # Configuration
+        #     TOP_N = 300
+            
+        #     # Define crew categories
+        #     crew_categories = {
+        #         'All Crew': df_validation,
+        #         'Captains': df_validation_captain,
+        #         'First Officers': df_validation_FO,
+        #         'Flight Attendants': df_validation_FA
+        #     }
+            
+        #     # Define metrics to analyze
+        #     metrics = {
+        #         'Block hours': {
+        #             'column': 'Block hours',
+        #             'title_suffix': 'Block Hours',
+        #             'y_label': 'Block Hours'
+        #         },
+        #         'Sectors': {
+        #             'column': 'Total sectors',
+        #             'title_suffix': 'Total sectors',
+        #             'y_label': 'Number of Total sectors'
+        #         }
+        #     }
+            
+        #     # Create charts for each metric
+        #     for metric_name, metric_config in metrics.items():
+        #         st.subheader(f"Top Crew by {metric_config['title_suffix']}")
+                
+        #         # Create columns for side-by-side display
+        #         cols = st.columns(4)
+                
+        #         # Generate chart for each crew category
+        #         for idx, (category_name, df) in enumerate(crew_categories.items()):
+        #             # Get top N performers
+        #             top_performers = df.nlargest(TOP_N, metric_config['column'])
+                    
+        #             # Create interactive bar chart
+        #             fig = px.bar(
+        #                 top_performers,
+        #                 x='Crew code',
+        #                 y=metric_config['column'],
+        #                 title=f" {category_name}",
+        #                 labels={
+        #                     'Crew code': 'Crew Code',
+        #                     metric_config['column']: metric_config['y_label']
+        #                 },
+        #                 hover_data=[metric_config['column']],
+        #                 color_discrete_sequence=['#1f77b4']  # Consistent color scheme
+        #             )
+                    
+        #             # Update layout for better readability
+        #             fig.update_layout(
+        #                 xaxis_tickangle=-45,
+        #                 height=400,
+        #                 margin=dict(l=20, r=20, t=40, b=20)
+        #             )
+                    
+        #             # Display chart in appropriate column
+        #             with cols[idx]:
+        #                 st.plotly_chart(fig, use_container_width=True)
+                
+        #         # Add spacing between metrics
+        #         st.markdown("---")
+
 
         
