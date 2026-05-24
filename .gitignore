@@ -7,3 +7,12 @@ __pycache__/
 # Ignore system files
 .DS_Store
 Thumbs.db
+
+# Output binaries — stored via GitHub API, not committed directly
+outputs/**/*.xlsx
+outputs/**/*.html
+
+# Keep the JSON index files
+!outputs/index.json
+!outputs/vendors.json
+!outputs/.gitkeep
