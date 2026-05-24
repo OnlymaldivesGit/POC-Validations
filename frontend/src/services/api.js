@@ -166,7 +166,7 @@ export function useVendors() {
     queryKey: ['vendors'],
     queryFn: async () => {
       const { data } = await api.get('/api/vendors')
-      return data
+      return Array.isArray(data) ? { vendors: data } : data
     },
   })
 }
