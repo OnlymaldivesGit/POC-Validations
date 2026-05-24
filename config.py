@@ -238,3 +238,20 @@ HTML_REPORT_FILENAME = "TMA_validation_report_{date}.html"
 CLUSTERING_TOP_N = 300
 # Maximum number of crew members shown in the HTML report bar charts.
 # Crew are ranked by the metric (block hours or sectors) and the top N kept.
+
+# ---------------------------------------------------------------------------
+# Canonical solver output column names
+# ---------------------------------------------------------------------------
+
+CANONICAL_SOLVER_COLUMNS = {
+    "date":             "Date",
+    "flight_no":        "Flight No.",
+    "aircraft_no":      "Aircraft No.",
+    "std":              "STD -  Scheduled Departure",
+    "sta":              "STA -  Scheduled Arrival",
+    "dep_airport":      "Dep. Airport",
+    "arr_airport":      "Arr. Airport",
+    "captain":          "Captain",
+    "first_officer":    "First Officer",
+    "flight_attendant": "Flight Attendant",
+}

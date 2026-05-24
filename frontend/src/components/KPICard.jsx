@@ -1,27 +1,36 @@
-import { clsx } from 'clsx'
+import { Info } from 'lucide-react'
+import { cn } from '../lib/utils'
+import Tooltip from './Tooltip'
 
 const variants = {
-  default: { border: 'border-l-slate-300', bg: '',           icon: 'bg-slate-100 text-slate-600' },
-  red:     { border: 'border-l-danger',    bg: 'bg-red-50/60',   icon: 'bg-red-100 text-danger' },
-  green:   { border: 'border-l-success',   bg: 'bg-green-50/60', icon: 'bg-green-100 text-success' },
-  amber:   { border: 'border-l-warning',   bg: 'bg-amber-50/60', icon: 'bg-amber-100 text-warning' },
+  default: { wrap: 'glass-card border-l-4 border-l-slate-300', icon: 'bg-slate-100 text-slate-500' },
+  red:     { wrap: 'glass-card kpi-red',   icon: 'bg-red-100 text-danger' },
+  green:   { wrap: 'glass-card kpi-green', icon: 'bg-green-100 text-success' },
+  amber:   { wrap: 'glass-card kpi-amber', icon: 'bg-amber-100 text-warning' },
 }
 
-export default function KPICard({ title, value, subtitle, icon: Icon, variant = 'default', delta }) {
+export default function KPICard({ title, value, subtitle, icon: Icon, variant = 'default', onClick, tooltip }) {
   const v = variants[variant] || variants.default
   return (
-    <div className={clsx('glass-card p-5 border-l-4 relative overflow-hidden', v.border, v.bg)}>
+    <div
+      onClick={onClick}
+      className={cn(v.wrap, 'p-5 relative overflow-hidden', onClick && 'cursor-pointer hover:scale-[1.02]')}
+    >
       {Icon && (
-        <div className={clsx('absolute top-4 right-4 w-9 h-9 rounded-lg flex items-center justify-center', v.icon)}>
-          <Icon className="w-5 h-5" />
+        <div className={cn('absolute top-4 right-4 w-8 h-8 rounded-lg flex items-center justify-center', v.icon)}>
+          <Icon className="w-4 h-4" />
         </div>
       )}
-      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1 pr-12">{title}</p>
+      <div className="flex items-center gap-1 mb-1 pr-10">
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{title}</p>
+        {tooltip && (
+          <Tooltip content={tooltip}>
+            <Info className="w-3 h-3 text-slate-400 cursor-help" />
+          </Tooltip>
+        )}
+      </div>
       <p className="text-3xl font-bold text-slate-800 leading-none">{value ?? '—'}</p>
-      {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
-      {delta && (
-        <p className="text-xs font-medium text-slate-500 mt-2">{delta}</p>
-      )}
+      {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
     </div>
   )
 }

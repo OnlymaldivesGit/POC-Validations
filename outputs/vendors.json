@@ -1,0 +1,22 @@
+{
+  "vendors": [
+    {
+      "id": "tma-default",
+      "name": "TMA",
+      "active": true,
+      "created_at": "2025-09-01T00:00:00Z",
+      "solver_output_columns": {
+        "date":             "Date",
+        "flight_no":        "Flight No.",
+        "aircraft_no":      "Aircraft No.",
+        "std":              "STD -  Scheduled Departure",
+        "sta":              "STA -  Scheduled Arrival",
+        "dep_airport":      "Dep. Airport",
+        "arr_airport":      "Arr. Airport",
+        "captain":          "Captain",
+        "first_officer":    "First Officer",
+        "flight_attendant": "Flight Attendant"
+      }
+    }
+  ]
+}
