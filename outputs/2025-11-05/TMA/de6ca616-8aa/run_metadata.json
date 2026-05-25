@@ -1,0 +1,21 @@
+{
+  "run_id": "de6ca616-8aa",
+  "date": "2025-11-05",
+  "vendor": "TMA",
+  "timestamp": "2026-05-25T18:51:56.022400+00:00",
+  "triggered_by": "api",
+  "status": "complete",
+  "violation_counts": {
+    "schedule_issues": 77,
+    "bh_violations": 0,
+    "dh_violations": 0,
+    "sector_violations": 0,
+    "pairing_issues": 83,
+    "status_issues": 3,
+    "overnight_issues": 2,
+    "aircraft_issues": 0
+  },
+  "total_violations": 165,
+  "available_crew": 192,
+  "scheduled_crew": 193
+}
