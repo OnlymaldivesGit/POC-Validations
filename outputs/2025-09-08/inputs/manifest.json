@@ -14,5 +14,9 @@
   "expiry_data": {
     "filename": "Training Expiry.xlsx",
     "uploadedAt": "2026-05-25T08:47:03.357180+00:00"
+  },
+  "crew_stats": {
+    "filename": "Crew Stats.xlsx",
+    "uploadedAt": "2026-05-25T08:47:09.218218+00:00"
   }
 }
