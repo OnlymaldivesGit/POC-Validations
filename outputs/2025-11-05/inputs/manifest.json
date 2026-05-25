@@ -26,5 +26,9 @@
   "input_flight_plan": {
     "filename": "Flight_Plan.xlsx",
     "uploadedAt": "2026-05-25T08:07:33.219970+00:00"
+  },
+  "logsheet": {
+    "filename": "Log_Sheet.xlsx",
+    "uploadedAt": "2026-05-25T08:07:43.449766+00:00"
   }
 }
