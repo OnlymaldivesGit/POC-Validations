@@ -34,5 +34,9 @@
   "aircraft": {
     "filename": "Aircrafts.xlsx",
     "uploadedAt": "2026-05-25T08:47:29.668003+00:00"
+  },
+  "input_flight_plan": {
+    "filename": "Flight Plan.xlsx",
+    "uploadedAt": "2026-05-25T08:47:34.732506+00:00"
   }
 }
