@@ -30,5 +30,9 @@
   "month_plan": {
     "filename": "Month plan.xlsx",
     "uploadedAt": "2026-05-25T08:47:25.231754+00:00"
+  },
+  "aircraft": {
+    "filename": "Aircrafts.xlsx",
+    "uploadedAt": "2026-05-25T08:47:29.668003+00:00"
   }
 }
