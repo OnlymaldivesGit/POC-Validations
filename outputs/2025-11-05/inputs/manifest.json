@@ -18,5 +18,9 @@
   "crew_master": {
     "filename": "Crew_Resource.xlsx",
     "uploadedAt": "2026-05-25T08:07:18.719196+00:00"
+  },
+  "crew_stats": {
+    "filename": "Crewstats.xlsx",
+    "uploadedAt": "2026-05-25T08:07:23.631506+00:00"
   }
 }
