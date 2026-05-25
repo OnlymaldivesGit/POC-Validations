@@ -14,5 +14,9 @@
   "seniority": {
     "filename": "Crew_Pairing.xlsx",
     "uploadedAt": "2026-05-25T08:07:13.577681+00:00"
+  },
+  "crew_master": {
+    "filename": "Crew_Resource.xlsx",
+    "uploadedAt": "2026-05-25T08:07:18.719196+00:00"
   }
 }
