@@ -2,5 +2,9 @@
   "aircraft": {
     "filename": "Aircrafts.xlsx",
     "uploadedAt": "2026-05-25T08:06:57.889758+00:00"
+  },
+  "crew_aircraft": {
+    "filename": "Crew_Aircraft_Type_Matrix.xlsx",
+    "uploadedAt": "2026-05-25T08:07:03.586262+00:00"
   }
 }
