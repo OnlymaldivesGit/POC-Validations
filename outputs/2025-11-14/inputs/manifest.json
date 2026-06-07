@@ -22,5 +22,9 @@
   "crew_master": {
     "filename": "141125/Crew_Resource.xlsx",
     "uploadedAt": "2026-06-07T11:07:50.894077+00:00"
+  },
+  "flight_training": {
+    "filename": "141125/Training_Pairings.xlsx",
+    "uploadedAt": "2026-06-07T11:08:01.228098+00:00"
   }
 }
