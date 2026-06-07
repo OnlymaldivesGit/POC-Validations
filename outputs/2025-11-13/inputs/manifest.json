@@ -26,5 +26,9 @@
   "crew_stats": {
     "filename": "131125/Crewstats.xlsx",
     "uploadedAt": "2026-06-07T11:07:18.494396+00:00"
+  },
+  "month_plan": {
+    "filename": "131125/Monthly_Plan.xlsx",
+    "uploadedAt": "2026-06-07T11:07:19.210296+00:00"
   }
 }
