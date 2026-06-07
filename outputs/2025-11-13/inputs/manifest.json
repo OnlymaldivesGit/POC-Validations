@@ -30,5 +30,9 @@
   "month_plan": {
     "filename": "131125/Monthly_Plan.xlsx",
     "uploadedAt": "2026-06-07T11:07:19.210296+00:00"
+  },
+  "flight_training": {
+    "filename": "131125/Training_Pairings.xlsx",
+    "uploadedAt": "2026-06-07T11:07:18.841772+00:00"
   }
 }
