@@ -22,5 +22,9 @@
   "logsheet": {
     "filename": "161125/Log_Sheet.xlsx",
     "uploadedAt": "2026-06-07T11:09:18.070677+00:00"
+  },
+  "flight_training": {
+    "filename": "161125/Training_Pairings.xlsx",
+    "uploadedAt": "2026-06-07T11:09:28.839814+00:00"
   }
 }
