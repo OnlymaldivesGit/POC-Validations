@@ -2,5 +2,9 @@
   "flight_training": {
     "filename": "081125/Training_Pairings.xlsx",
     "uploadedAt": "2026-06-07T10:54:06.082184+00:00"
+  },
+  "crew_aircraft": {
+    "filename": "081125/Crew_Aircraft_Type_Matrix.xlsx",
+    "uploadedAt": "2026-06-07T10:54:06.447621+00:00"
   }
 }
