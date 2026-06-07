@@ -1,0 +1,64 @@
+{
+  "validation_1": [
+    {
+      "Crew code": "FRAA",
+      "Prev Day": "TR",
+      "Schedule Day": "TR",
+      "Next Day": "LPC",
+      "Crew name": "Franklin Kevin Aquino ",
+      "Crew Type": "Captain",
+      "Seniority Level": "",
+      "Is Instructor?": "",
+      "Outstation airport": "MLE"
+    },
+    {
+      "Crew code": "AFAR",
+      "Prev Day": "X",
+      "Schedule Day": "1",
+      "Next Day": "1",
+      "Crew name": "Andrew Allan Farr ",
+      "Crew Type": "Captain",
+      "Seniority Level": "",
+      "Is Instructor?": "",
+      "Outstation airport": "MLE"
+    },
+    {
+      "Crew code": "MKHA",
+      "Prev Day": "1",
+      "Schedule Day": "1",
+      "Next Day": "EM",
+      "Crew name": "Mohamed Khalid ",
+      "Crew Type": "Captain",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "No",
+      "Outstation airport": ""
+    },
+    {
+      "Crew code": "AHUF",
+      "Prev Day": "1",
+      "Schedule Day": "1",
+      "Next Day": "1",
+      "Crew name": "Ahmed Huzaif Fazeel  ",
+      "Crew Type": "Flight Attendant",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "Yes",
+      "Outstation airport": ""
+    },
+    {
+      "Crew code": "MASY",
+      "Prev Day": "1",
+      "Schedule Day": "1",
+      "Next Day": "1",
+      "Crew name": "Mohamed Abaan Shiyam",
+      "Crew Type": "Flight Attendant",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "Yes",
+      "Outstation airport": ""
+    }
+  ],
+  "validation_2": [],
+  "clean": false,
+  "runAt": "2026-06-07T11:58:35.825141+00:00",
+  "runBy": "System",
+  "date": "2025-11-18"
+}
