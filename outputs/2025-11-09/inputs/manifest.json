@@ -26,5 +26,9 @@
   "flight_training": {
     "filename": "091125/Training_Pairings.xlsx",
     "uploadedAt": "2026-06-07T11:00:37.186676+00:00"
+  },
+  "crew_stats": {
+    "filename": "091125/Crewstats.xlsx",
+    "uploadedAt": "2026-06-07T11:00:37.909600+00:00"
   }
 }
