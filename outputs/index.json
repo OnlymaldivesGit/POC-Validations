@@ -84,7 +84,8 @@
       "violation_counts": null,
       "version": null,
       "uploadedAt": "2026-06-07T11:12:32.782898+00:00",
-      "solver_path": "outputs/2025-11-05/Ktree/22eb63ea-bde/solver_output.xlsx"
+      "solver_path": "outputs/2025-11-05/Ktree/22eb63ea-bde/solver_output.xlsx",
+      "error": "Cannot read 'expiry_data' as Excel (.xlsx): File is not a zip file"
     },
     {
       "run_id": "261c9b12-2ef",
