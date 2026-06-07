@@ -22,5 +22,9 @@
   "aircraft": {
     "filename": "081125/Aircrafts.xlsx",
     "uploadedAt": "2026-06-07T10:59:38.293120+00:00"
+  },
+  "seniority": {
+    "filename": "081125/Crew_Pairing.xlsx",
+    "uploadedAt": "2026-06-07T10:59:38.645000+00:00"
   }
 }
