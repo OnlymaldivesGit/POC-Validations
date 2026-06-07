@@ -10,5 +10,9 @@
   "expiry_data": {
     "filename": "081125/Crew_License_Expiry.xlsx",
     "uploadedAt": "2026-06-07T10:54:07.164907+00:00"
+  },
+  "month_plan": {
+    "filename": "081125/Monthly_Plan.xlsx",
+    "uploadedAt": "2026-06-07T10:54:07.864746+00:00"
   }
 }
