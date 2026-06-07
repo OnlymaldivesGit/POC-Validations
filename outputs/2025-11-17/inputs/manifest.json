@@ -10,5 +10,9 @@
   "crew_aircraft": {
     "filename": "171125/Crew_Aircraft_Type_Matrix.xlsx",
     "uploadedAt": "2026-06-07T11:09:59.091025+00:00"
+  },
+  "crew_master": {
+    "filename": "171125/Crew_Resource.xlsx",
+    "uploadedAt": "2026-06-07T11:10:06.873785+00:00"
   }
 }
