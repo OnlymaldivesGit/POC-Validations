@@ -1,54 +1,6 @@
 {
   "runs": [
     {
-      "run_id": "8bcec08f-8eb",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T08:50:14.706377+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
-      "run_id": "26661914-766",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T08:50:45.072240+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
-      "run_id": "7ba6bb2a-3b0",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T08:53:27.286549+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
-      "run_id": "52fe6271-2cd",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T08:53:55.889446+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
-      "run_id": "ef9fe356-bcc",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T08:59:55.766022+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
-      "run_id": "b02453f2-630",
-      "date": "2025-09-08",
-      "vendor": "TMA",
-      "timestamp": "2026-05-25T09:02:36.528301+00:00",
-      "status": "complete",
-      "total_violations": 62
-    },
-    {
       "run_id": "e27669dd-2fb",
       "date": "2025-11-05",
       "vendor": "TMA",
