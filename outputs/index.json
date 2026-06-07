@@ -79,7 +79,7 @@
       "date": "2025-11-05",
       "vendor": "Ktree",
       "timestamp": "2026-06-07T11:12:32.782898+00:00",
-      "status": "uploaded",
+      "status": "failed",
       "total_violations": null,
       "violation_counts": null,
       "version": null,
