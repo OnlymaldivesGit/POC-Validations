@@ -30,5 +30,9 @@
   "month_plan": {
     "filename": "071125/Monthly_Plan.xlsx",
     "uploadedAt": "2026-06-07T10:52:00.851556+00:00"
+  },
+  "crew_stats": {
+    "filename": "071125/Crewstats.xlsx",
+    "uploadedAt": "2026-06-07T10:52:05.636673+00:00"
   }
 }
