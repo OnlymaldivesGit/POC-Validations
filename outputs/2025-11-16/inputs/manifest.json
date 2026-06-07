@@ -6,5 +6,9 @@
   "crew_aircraft": {
     "filename": "161125/Crew_Aircraft_Type_Matrix.xlsx",
     "uploadedAt": "2026-06-07T11:09:09.690182+00:00"
+  },
+  "aircraft": {
+    "filename": "161125/Aircrafts.xlsx",
+    "uploadedAt": "2026-06-07T11:09:09.344774+00:00"
   }
 }
