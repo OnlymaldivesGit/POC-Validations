@@ -34,5 +34,9 @@
   "flight_training": {
     "filename": "121125/Training_Pairings.xlsx",
     "uploadedAt": "2026-06-07T11:06:39.419597+00:00"
+  },
+  "input_flight_plan": {
+    "filename": "121125/Flight_Plan.xlsx",
+    "uploadedAt": "2026-06-07T11:06:47.113319+00:00"
   }
 }
