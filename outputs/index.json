@@ -73,6 +73,19 @@
       "uploadedAt": "2026-06-07T11:36:39.240274+00:00",
       "solver_path": "outputs/2025-11-18/Ktree/solver_v1.xlsx",
       "error": null
+    },
+    {
+      "run_id": "dcc08c2a-7a6",
+      "date": "2025-11-18",
+      "vendor": "Ktree",
+      "timestamp": "2026-06-07T11:50:51.196888+00:00",
+      "status": "uploaded",
+      "total_violations": null,
+      "violation_counts": null,
+      "version": 2,
+      "uploadedAt": "2026-06-07T11:50:51.196888+00:00",
+      "solver_path": "outputs/2025-11-18/Ktree/solver_v2.xlsx",
+      "error": null
     }
   ]
 }
