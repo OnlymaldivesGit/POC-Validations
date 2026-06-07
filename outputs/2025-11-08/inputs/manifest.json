@@ -34,5 +34,9 @@
   "crew_stats": {
     "filename": "081125/Crewstats.xlsx",
     "uploadedAt": "2026-06-07T10:59:54.983811+00:00"
+  },
+  "input_flight_plan": {
+    "filename": "081125/Flight_Plan.xlsx",
+    "uploadedAt": "2026-06-07T11:00:03.768540+00:00"
   }
 }
