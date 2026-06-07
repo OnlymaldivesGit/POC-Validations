@@ -10,5 +10,9 @@
   "seniority": {
     "filename": "091125/Crew_Pairing.xlsx",
     "uploadedAt": "2026-06-07T11:00:20.416537+00:00"
+  },
+  "expiry_data": {
+    "filename": "091125/Crew_License_Expiry.xlsx",
+    "uploadedAt": "2026-06-07T11:00:28.358522+00:00"
   }
 }
