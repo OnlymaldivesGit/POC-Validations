@@ -26,5 +26,9 @@
   "logsheet": {
     "filename": "181125/Log_Sheet.xlsx",
     "uploadedAt": "2026-06-07T11:11:32.056974+00:00"
+  },
+  "crew_stats": {
+    "filename": "181125/Crewstats.xlsx",
+    "uploadedAt": "2026-06-07T11:11:39.758645+00:00"
   }
 }
