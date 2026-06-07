@@ -10,5 +10,9 @@
   "aircraft": {
     "filename": "181125/Aircrafts.xlsx",
     "uploadedAt": "2026-06-07T11:10:42.572766+00:00"
+  },
+  "flight_training": {
+    "filename": "181125/Training_Pairings.xlsx",
+    "uploadedAt": "2026-06-07T11:10:55.771333+00:00"
   }
 }
