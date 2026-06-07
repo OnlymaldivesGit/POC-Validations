@@ -22,5 +22,9 @@
   "expiry_data": {
     "filename": "171125/Crew_License_Expiry.xlsx",
     "uploadedAt": "2026-06-07T11:10:07.242764+00:00"
+  },
+  "flight_training": {
+    "filename": "171125/Training_Pairings.xlsx",
+    "uploadedAt": "2026-06-07T11:10:15.346258+00:00"
   }
 }
