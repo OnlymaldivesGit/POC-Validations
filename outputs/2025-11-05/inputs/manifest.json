@@ -35,9 +35,9 @@
     "uploadedAt": "2026-06-08T04:50:32.433580+00:00"
   },
   "month_plan": {
-    "filename": "Monthly_Plan.xlsx",
-    "path": "outputs/2025-11-05/inputs/Monthly_Plan.xlsx",
-    "uploadedAt": "2026-06-08T04:50:32.433582+00:00"
+    "filename": "Month plan.xlsx",
+    "path": "outputs/2025-11-05/inputs/Month plan.xlsx",
+    "uploadedAt": "2026-06-08T05:12:32.894428+00:00"
   },
   "crew_stats": {
     "filename": "Crewstats.xlsx",
