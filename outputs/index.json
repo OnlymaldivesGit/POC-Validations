@@ -12,6 +12,28 @@
       "uploadedAt": "2026-06-08T04:44:38.168382+00:00",
       "solver_path": "outputs/2025-11-18/Ktree/solver_v1.xlsx",
       "error": null
+    },
+    {
+      "run_id": "5e8acadf-5a7",
+      "date": "2025-11-05",
+      "vendor": "TMA",
+      "timestamp": "2026-06-08T05:02:05.704805+00:00",
+      "status": "complete",
+      "total_violations": 1229,
+      "violation_counts": {
+        "schedule_issues": 1020,
+        "bh_violations": 0,
+        "dh_violations": 0,
+        "sector_violations": 0,
+        "pairing_issues": 8,
+        "status_issues": 111,
+        "overnight_issues": 72,
+        "aircraft_issues": 18
+      },
+      "version": null,
+      "uploadedAt": null,
+      "solver_path": null,
+      "error": null
     }
   ]
 }
