@@ -25,6 +25,19 @@
         "overnight_issues": 2,
         "aircraft_issues": 0
       }
+    },
+    {
+      "run_id": "9a7f814a-3c5",
+      "date": "2025-11-18",
+      "vendor": "Ktree",
+      "timestamp": "2026-06-08T04:44:38.168382+00:00",
+      "status": "uploaded",
+      "total_violations": null,
+      "violation_counts": null,
+      "version": 1,
+      "uploadedAt": "2026-06-08T04:44:38.168382+00:00",
+      "solver_path": "outputs/2025-11-18/Ktree/solver_v1.xlsx",
+      "error": null
     }
   ]
 }
