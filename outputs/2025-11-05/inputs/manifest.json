@@ -30,9 +30,9 @@
     "uploadedAt": "2026-06-08T05:12:28.546898+00:00"
   },
   "flight_training": {
-    "filename": "Training_Pairings.xlsx",
-    "path": "outputs/2025-11-05/inputs/Training_Pairings.xlsx",
-    "uploadedAt": "2026-06-08T04:50:32.433580+00:00"
+    "filename": "Training Pairings.xlsx",
+    "path": "outputs/2025-11-05/inputs/Training Pairings.xlsx",
+    "uploadedAt": "2026-06-08T05:12:41.821146+00:00"
   },
   "month_plan": {
     "filename": "Month plan.xlsx",
