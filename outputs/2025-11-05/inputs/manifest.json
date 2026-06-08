@@ -48,5 +48,10 @@
     "filename": "Flight Plan.xlsx",
     "path": "outputs/2025-11-05/inputs/Flight Plan.xlsx",
     "uploadedAt": "2026-06-08T05:12:18.339491+00:00"
+  },
+  "solver_output": {
+    "filename": "Model Output.xlsx",
+    "path": "outputs/2025-11-05/inputs/Model Output.xlsx",
+    "uploadedAt": "2026-06-08T05:13:12.353095+00:00"
   }
 }
