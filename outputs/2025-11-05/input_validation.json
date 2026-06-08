@@ -1,0 +1,66 @@
+{
+  "validation_1": [
+    {
+      "Crew code": "AFAR",
+      "Prev Day": "TR",
+      "Schedule Day": "LPC",
+      "Next Day": "LC",
+      "Crew name": "Andrew Allan Farr ",
+      "Crew Type": "Captain",
+      "Seniority Level": "",
+      "Is Instructor?": "",
+      "Outstation airport": "MLE"
+    },
+    {
+      "Crew code": "ISMS",
+      "Prev Day": "LC",
+      "Schedule Day": "O",
+      "Next Day": "X",
+      "Crew name": "Ismail Shifan ",
+      "Crew Type": "Captain",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "Yes",
+      "Outstation airport": ""
+    },
+    {
+      "Crew code": "MKHA",
+      "Prev Day": "1",
+      "Schedule Day": "1",
+      "Next Day": "1",
+      "Crew name": "Mohamed Khalid ",
+      "Crew Type": "Captain",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "No",
+      "Outstation airport": ""
+    },
+    {
+      "Crew code": "IMOH",
+      "Prev Day": "1",
+      "Schedule Day": "1",
+      "Next Day": "X",
+      "Crew name": "Ibrahim Mohamed",
+      "Crew Type": "Flight Attendant",
+      "Seniority Level": "Senior",
+      "Is Instructor?": "Yes",
+      "Outstation airport": ""
+    }
+  ],
+  "validation_2": [
+    {
+      "Crew code": "ISMS",
+      "Prev Day": "LC",
+      "Schedule Day": "O",
+      "Next Day": "X",
+      "Crew name": "Ismail Shifan ",
+      "Crew Type": "Captain",
+      "Max BH left": 0.0,
+      "Max BH left ON": 0.0,
+      "Max DH left": 0.0,
+      "Max sectors left": 0.0
+    }
+  ],
+  "clean": false,
+  "runAt": "2026-06-08T04:54:48.351324+00:00",
+  "runBy": "System",
+  "date": "2025-11-05"
+}
