@@ -40,9 +40,9 @@
     "uploadedAt": "2026-06-08T05:12:32.894428+00:00"
   },
   "crew_stats": {
-    "filename": "Crewstats.xlsx",
-    "path": "outputs/2025-11-05/inputs/Crewstats.xlsx",
-    "uploadedAt": "2026-06-08T04:50:32.433583+00:00"
+    "filename": "Crew Stats.xlsx",
+    "path": "outputs/2025-11-05/inputs/Crew Stats.xlsx",
+    "uploadedAt": "2026-06-08T05:12:58.999634+00:00"
   },
   "input_flight_plan": {
     "filename": "Flight Plan.xlsx",
